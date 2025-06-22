@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_mobile/color.dart';
+import 'package:whatsapp_mobile/widgets/searchBar.dart';
 
 class MobileScreenLayout extends StatefulWidget {
   const MobileScreenLayout({super.key});
@@ -13,8 +14,8 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
 
   static const List<Widget> _pages = <Widget>[
     Center(child: Text('Chats')),
-    Center(child: Text('Update')),
-    Center(child: Text('Calls')),
+    Center(child: Text('Update Pannel Comming Soon')),
+    Center(child: Text('Calls Pannel Comming Soon')),
   ];
 
   void _onItemTapped(int index) {
@@ -28,25 +29,34 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: appBarColor,
-        title: const Text(
-          "WhatsApp",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-          ),
+        backgroundColor: backgroundColor,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "WhatsApp",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 27,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
         actions: [
           IconButton(
             onPressed: () {},
-            icon: Icon(Icons.search, color: Colors.white),
+            icon: Icon(Icons.camera_alt_outlined, color: Colors.white),
           ),
           IconButton(
             onPressed: () {},
             icon: Icon(Icons.more_vert, color: Colors.white),
           ),
         ],
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(50),
+          child: const WhatsAppSearchBar(),
+        ),
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: Theme(
@@ -66,7 +76,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
             BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chats'),
             BottomNavigationBarItem(
               icon: Icon(Icons.donut_large),
-              label: 'Status',
+              label: 'Updates',
             ),
             BottomNavigationBarItem(icon: Icon(Icons.call), label: 'Calls'),
           ],
