@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_mobile/color.dart';
+import 'package:whatsapp_mobile/widgets/contactList.dart';
 import 'package:whatsapp_mobile/widgets/searchBar.dart';
 
 class MobileScreenLayout extends StatefulWidget {
@@ -13,7 +14,8 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
   int _selectedIndex = 0;
 
   static const List<Widget> _pages = <Widget>[
-    Center(child: Text('Chats')),
+    Contactlist(),
+
     Center(child: Text('Update Pannel Comming Soon')),
     Center(child: Text('Calls Pannel Comming Soon')),
   ];

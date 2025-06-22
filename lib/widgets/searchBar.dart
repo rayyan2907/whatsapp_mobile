@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_mobile/color.dart';
+import 'package:http/http.dart' as http;
 
 class WhatsAppSearchBar extends StatelessWidget {
   const WhatsAppSearchBar({super.key});
