@@ -3,6 +3,7 @@ import 'package:whatsapp_mobile/widgets/contactList.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:whatsapp_mobile/widgets/webSearchBar.dart';
 import 'package:whatsapp_mobile/widgets/wev_profie_bar.dart';
+import 'package:whatsapp_mobile/widgets/web_chatapp_bar.dart';
 
 class WebScreenLayout extends StatelessWidget {
   const WebScreenLayout({super.key});
@@ -30,12 +31,7 @@ class WebScreenLayout extends StatelessWidget {
           Expanded(
             child: Container(
               color: backgroundColor,
-              child: const Center(
-                child: Text(
-                  "Select a chat to start messaging",
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
+              child: const Center(child: Column(children: [WebChatappBar()])),
             ),
           ),
         ],
