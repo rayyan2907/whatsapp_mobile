@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:whatsapp_mobile/responsive/responsive_layout.dart';
+import 'package:whatsapp_mobile/screens/mobile_screen_layout.dart';
+import 'package:whatsapp_mobile/screens/web_screen_layout.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -18,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor:  backgroundColor,
       ),
-      home: ResponsiveLayout(MobileScreenLayout: MobileScreenLayout,WebScreenLayout: WebScreenLayout),
+      home: const ResponsiveLayout(MobileScreenLayout: MobileScreenLayout(),WebScreenLayout: WebScreenLayout()),
     );
   }
 }
