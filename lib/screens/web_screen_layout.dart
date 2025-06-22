@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_mobile/widgets/contactList.dart';
 import 'package:whatsapp_mobile/color.dart';
+import 'package:whatsapp_mobile/widgets/webSearchBar.dart';
+import 'package:whatsapp_mobile/widgets/wev_profie_bar.dart';
 
 class WebScreenLayout extends StatelessWidget {
   const WebScreenLayout({super.key});
@@ -15,7 +17,13 @@ class WebScreenLayout extends StatelessWidget {
           Container(
             width: MediaQuery.of(context).size.width * 0.25, // 25% width
             color: webAppBarColor,
-            child: Contactlist(),
+            child: Column(
+              children: [
+                WebProfileBar(),
+                const WebSearchBar(),
+                const Expanded(child: Contactlist()),
+              ],
+            ),
           ),
 
           // Right Chat Area
