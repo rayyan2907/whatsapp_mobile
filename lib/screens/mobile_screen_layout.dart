@@ -61,6 +61,11 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
         ),
       ),
       body: _pages[_selectedIndex],
+      floatingActionButton: FloatingActionButton(
+          onPressed: (){},
+        backgroundColor: tabColor,
+        child: const Icon(Icons.comment,color: Colors.white,),
+      ),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
           splashColor: Colors.transparent,

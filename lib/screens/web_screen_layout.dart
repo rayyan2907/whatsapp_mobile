@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:whatsapp_mobile/widgets/chatList.dart';
 import 'package:whatsapp_mobile/widgets/contactList.dart';
 import 'package:whatsapp_mobile/color.dart';
+import 'package:whatsapp_mobile/widgets/messageBoxWeb.dart';
 import 'package:whatsapp_mobile/widgets/webSearchBar.dart';
 import 'package:whatsapp_mobile/widgets/wev_profie_bar.dart';
 import 'package:whatsapp_mobile/widgets/web_chatapp_bar.dart';
@@ -32,13 +33,20 @@ class WebScreenLayout extends StatelessWidget {
           Expanded(
             child: Container(
               color: backgroundColor,
-              child: const Center(child: Column(children: [
-                WebChatappBar(),
-                Expanded(child: Chatlist())
-              ])),
+              child: const Center(
+                child: Column(
+                  children: [
+                    WebChatappBar(),
+                    Expanded(child: Chatlist()),
+                    SendMessageBar(),
+                  ],
+                ),
+              ),
             ),
           ),
+
         ],
+
       ),
     );
   }
