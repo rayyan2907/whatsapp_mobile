@@ -1,29 +1,74 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_mobile/color.dart';
 
-class MobileScreenLayout extends StatelessWidget {
+class MobileScreenLayout extends StatefulWidget {
   const MobileScreenLayout({super.key});
 
   @override
+  State<MobileScreenLayout> createState() => _MobileScreenLayoutState();
+}
+
+class _MobileScreenLayoutState extends State<MobileScreenLayout> {
+  int _selectedIndex = 0;
+
+  static const List<Widget> _pages = <Widget>[
+    Center(child: Text('Chats')),
+    Center(child: Text('Update')),
+    Center(child: Text('Calls')),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: appBarColor,
-          title: const Text(
-            "WhatsApp",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-            ),
+    return Scaffold(
+      backgroundColor: backgroundColor,
+      appBar: AppBar(
+        backgroundColor: appBarColor,
+        title: const Text(
+          "WhatsApp",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
           ),
-          actions: [
-            IconButton(onPressed: (){}, icon: Icon(Icons.search,color: Colors.white,)),
-            IconButton(onPressed: (){}, icon: Icon(Icons.more_vert, color: Colors.white,))
-
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.search, color: Colors.white),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.more_vert, color: Colors.white),
+          ),
+        ],
+      ),
+      body: _pages[_selectedIndex],
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          hoverColor: Colors.transparent,
+        ),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed, // Prevents shifting
+          backgroundColor: appBarColor,
+          selectedItemColor: tabColor,
+          unselectedItemColor: Colors.white,
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chats'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.donut_large),
+              label: 'Status',
+            ),
+            BottomNavigationBarItem(icon: Icon(Icons.call), label: 'Calls'),
           ],
         ),
       ),
