@@ -3,13 +3,13 @@ const contacts = [
     'name': 'Rayyan',
     'message': 'Hey, what’s up?',
     'time': '03:45 pm',
-    'profile_pic': 'https://randomuser.me/api/portraits/men/11.jpg',
+    'profile_pic': 'https://whatsap.blob.core.windows.net/profilepics/713d99e3-a249-4633-bf61-d2df4e55dd39.jpg',
   },
   {
     'name': 'Ali Khan',
     'message': 'Meeting postponed to 5PM.',
     'time': '02:10 pm',
-    'profile_pic': 'https://randomuser.me/api/portraits/men/12.jpg',
+    'profile_pic': '',
   },
   {
     'name': 'Zoya Fatima',
@@ -21,7 +21,7 @@ const contacts = [
     'name': 'Class Group',
     'message': 'Assignment deadline extended!',
     'time': '12:01 pm',
-    'profile_pic': 'https://img.icons8.com/color/96/000000/groups.png',
+    'profile_pic': null,
   },
   {
     'name': 'Ammi',
