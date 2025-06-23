@@ -243,7 +243,7 @@ const messages = [
     'time': '01:30 pm',
     'type': 'text',
     'is_seen': true,
-    'txt_msg': 'Where did you go?',
+    'txt_msg': 'Where did you go?vjcheuihfcecveruirhfioehferiohioveiocjijefvioiovueiowjcioehviw',
     'img_url': null,
     'caption': null,
     'voice_url': null,
