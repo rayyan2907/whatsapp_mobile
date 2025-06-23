@@ -23,7 +23,7 @@ class MobileChatScreen extends StatelessWidget {
         title: Row(
           children: [
             CircleAvatar(
-              radius: 20,
+              radius: 15,
               backgroundImage:
                   user['profile_pic'] != null &&
                       user['profile_pic'].toString().isNotEmpty
@@ -61,9 +61,9 @@ class MobileChatScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {},
-            icon: const Icon(CupertinoIcons.video_camera,color: Colors.white, size: 32),
+            icon: const Icon(CupertinoIcons.video_camera,color: Colors.white, size: 28),
           ),
-          IconButton(onPressed: () {}, icon: const Icon(CupertinoIcons.phone,color: Colors.white,)),
+          IconButton(onPressed: () {}, icon: const Icon(CupertinoIcons.phone,color: Colors.white,size: 20,)),
         ],
       ),
       body: Column(

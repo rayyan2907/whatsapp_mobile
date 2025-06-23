@@ -38,7 +38,7 @@ class _MessageBarState extends State<MessageBar> {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       child: Row(
         children: [
-          const Icon(CupertinoIcons.add, color: Colors.white, size: 28),
+          const Icon(CupertinoIcons.add, color: Colors.white, size: 20),
           const SizedBox(width: 8),
 
           // Input + Emoji
@@ -46,24 +46,26 @@ class _MessageBarState extends State<MessageBar> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
-                color: Colors.black,
-                border: Border.all(color: Colors.grey.shade700),
-                borderRadius: BorderRadius.circular(30),
+                color: Colors.grey[850], // Grey background
+                borderRadius: BorderRadius.circular(22),
               ),
+              height: 38, // ↓ Decreased height
               child: Row(
                 children: [
                   Expanded(
                     child: TextField(
                       controller: _controller,
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white, fontSize: 13), // ↓ Smaller font
                       decoration: const InputDecoration(
                         hintText: "Message",
-                        hintStyle: TextStyle(color: Colors.grey),
+                        hintStyle: TextStyle(color: Colors.grey, fontSize: 13),
                         border: InputBorder.none,
+                        isDense: true, // ↓ Makes field tighter
+                        contentPadding: EdgeInsets.symmetric(vertical: 8), // ↓ Vertical padding
                       ),
                     ),
                   ),
-                  const Icon(CupertinoIcons.smiley, color: Colors.white),
+                  const Icon(CupertinoIcons.smiley, color: Colors.white, size: 18),
                 ],
               ),
             ),
@@ -78,7 +80,7 @@ class _MessageBarState extends State<MessageBar> {
               // Send action
             },
             icon: Container(
-              padding: const EdgeInsets.all(2),
+              padding: const EdgeInsets.all(6),
               decoration: const BoxDecoration(
                 color: Colors.greenAccent, // WhatsApp green
                 shape: BoxShape.circle,
@@ -86,16 +88,16 @@ class _MessageBarState extends State<MessageBar> {
               child: const Icon(
                 Icons.send,
                 color: Colors.black,
-                size: 20,
+                size: 18,
               ),
             ),
           )
 
         : Row(
             children: const [
-              Icon(CupertinoIcons.camera, color: Colors.white, size: 26),
+              Icon(CupertinoIcons.camera, color: Colors.white, size: 20),
               SizedBox(width: 8),
-              Icon(CupertinoIcons.mic, color: Colors.white, size: 26),
+              Icon(CupertinoIcons.mic, color: Colors.white, size: 20),
             ],
           ),
         ],
