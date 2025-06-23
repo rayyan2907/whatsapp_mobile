@@ -36,6 +36,7 @@ class ImageMessageBubble extends StatelessWidget {
             // Image container
             Stack(
               children: [
+
                 ClipRRect(
                   borderRadius: caption != null
                       ? const BorderRadius.vertical(top: Radius.circular(8))

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:whatsapp_mobile/widgets/videoContainer.dart';
 import 'package:whatsapp_mobile/widgets/voicePlay.dart';
 
 import 'imageContainer.dart';
@@ -42,25 +43,7 @@ class Sentmessage extends StatelessWidget {
         );
         break;
       case 'video':
-        content = Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (videoUrl != null)
-              Container(
-                width: 200,
-                height: 120,
-                color: Colors.black26,
-                child: const Center(child: Icon(Icons.videocam, color: Colors.white70)),
-              ),
-            if (caption != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: Text(caption!, style: const TextStyle(fontSize: 14, color: Colors.white)),
-              ),
-            if (duration != null)
-              Text("Duration: $duration", style: const TextStyle(color: Colors.white54, fontSize: 12)),
-          ],
-        );
+        content = VideoMessageBubble(videoUrl: videoUrl!,caption: caption!,);
         break;
       case 'voice':
         content = VoiceMessageBubble(

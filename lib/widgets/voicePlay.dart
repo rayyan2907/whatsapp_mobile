@@ -129,7 +129,6 @@ class _VoiceMessageBubbleState extends State<VoiceMessageBubble> {
                     }),
                   ),
                 ),
-                const SizedBox(width: 8),
               ],
             ),
           ),
