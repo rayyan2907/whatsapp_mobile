@@ -87,7 +87,6 @@ class _VoiceMessageBubbleState extends State<VoiceMessageBubble> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(
-              color: const Color(0xFF005C4B),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(

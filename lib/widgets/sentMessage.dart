@@ -3,6 +3,8 @@ import 'package:whatsapp_mobile/color.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:whatsapp_mobile/widgets/voicePlay.dart';
 
+import 'imageContainer.dart';
+
 
 class Sentmessage extends StatelessWidget {
   final String type;         // 'text', 'img', 'video', 'voice'
@@ -34,20 +36,9 @@ class Sentmessage extends StatelessWidget {
 
     switch (type) {
       case 'img':
-        content = Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (imgUrl != null)
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(imgUrl!, width: 200),
-              ),
-            if (caption != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: Text(caption!, style: const TextStyle(fontSize: 14, color: Colors.white)),
-              ),
-          ],
+        content = ImageMessageBubble(
+          imageUrl: imgUrl!,
+          caption: caption, time: date,
         );
         break;
       case 'video':
@@ -117,7 +108,7 @@ class Sentmessage extends StatelessWidget {
                             duration!,
                             style: const TextStyle(color: Colors.white70, fontSize: 12),
                           ),
-                          const SizedBox(width: 80),
+                          const SizedBox(width: 65),
                         ],
                       ],
                     ),

@@ -100,12 +100,30 @@ class ReceivedMessage extends StatelessWidget {
               Positioned(
                 bottom: 4,
                 right: 10,
-                child: Text(
-                  date,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.white60,
-                  ),
+                child: Row(
+                  children: [
+                    Row(
+                      children: [
+                        if (duration != null) ...[
+                          Text(
+                            duration!,
+                            style: const TextStyle(color: Colors.white70, fontSize: 12),
+                          ),
+                          const SizedBox(width: 75),
+                        ],
+                      ],
+                    ),
+
+
+                    Text(
+
+                      date,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.white60,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

@@ -307,5 +307,20 @@ const messages = [
     'video_url': null,
     'is_sent': false,
   },
+  {
+    'message_id': 20,
+    'reciver_id': 15,
+    'time': '01:45 pm',
+    'type': 'img',
+    'is_seen': false,
+    'txt_msg': null,
+    'img_url': 'https://whatsap.blob.core.windows.net/profilepics/713d99e3-a249-4633-bf61-d2df4e55dd39.jpg',
+    'caption': 'this is me',
+    'voice_url': null,
+    'duration': "",
+    'video_url': null,
+    'is_sent': true,
+  },
+
 ];
 
