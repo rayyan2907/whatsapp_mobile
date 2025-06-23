@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:whatsapp_mobile/color.dart';
+import 'package:whatsapp_mobile/widgets/calls.dart';
 import 'package:whatsapp_mobile/widgets/community.dart';
 import 'package:whatsapp_mobile/widgets/contactList.dart';
 import 'package:whatsapp_mobile/widgets/searchBar.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:whatsapp_mobile/widgets/settings.dart';
 import 'package:whatsapp_mobile/widgets/updates.dart';
 
 
@@ -20,10 +22,10 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
 
   static const List<Widget> _pages = <Widget>[
     UpdatesPage(),
-    Center(child: Text('Calls Coming Soon')),
+    CallsPage(),
     CommunitiesPage(),
     Contactlist(),
-    Center(child: Text('Settings Coming Soon')),
+    SettingsPage(),
   ];
 
   void _onItemTapped(int index) {

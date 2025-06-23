@@ -14,7 +14,7 @@ class Contactlist extends StatelessWidget {
       itemBuilder: (context, index) {
         if (index == 0) {
           return const Padding(
-            padding: EdgeInsets.fromLTRB(16, 5, 16, 10),
+            padding: EdgeInsets.fromLTRB(16, 14, 16, 10),
             child: Text(
               'Chats',
               style: TextStyle(

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:whatsapp_mobile/color.dart';
 
 class UpdatesPage extends StatelessWidget {
   const UpdatesPage({super.key});
@@ -7,7 +8,7 @@ class UpdatesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
+      backgroundColor: backgroundColor,
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -128,3 +129,5 @@ class UpdatesPage extends StatelessWidget {
     );
   }
 }
+
+
