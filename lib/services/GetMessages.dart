@@ -305,7 +305,7 @@ const messages = [
     'voice_url': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
     'duration': '00:00:13',
     'video_url': null,
-    'is_sent': true,
+    'is_sent': false,
   },
 ];
 

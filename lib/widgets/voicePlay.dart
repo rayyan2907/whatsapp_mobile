@@ -38,24 +38,33 @@ class _VoiceMessageBubbleState extends State<VoiceMessageBubble> {
   }
 
   Future<void> _togglePlay() async {
-    if (!_isLoaded) {
-      setState(() => _isLoading = true);
-      try {
-        await _player.setUrl(widget.voiceUrl);
-        _isLoaded = true;
-      } catch (e) {
-        print("Error loading audio: $e");
-      }
-      setState(() => _isLoading = false);
-    }
-
     if (_isPlaying) {
+      // Update UI first, then pause
+      setState(() {
+        _isPlaying = false;
+
+      });
       await _player.pause();
     } else {
-      await _player.play();
-    }
+      setState(() {
+        _isLoading = true;
+      });
 
-    setState(() => _isPlaying = !_isPlaying);
+      try {
+        if (!_isLoaded) {
+          await _player.setUrl(widget.voiceUrl);
+          _isLoaded = true;
+        }
+        setState(() {
+          _isPlaying = true;
+          _isLoading = false;
+        });
+        await _player.play();
+      } catch (e) {
+        print("Audio load/play failed: $e");
+        setState(() => _isLoading = false);
+      }
+    }
   }
 
   @override
@@ -86,21 +95,21 @@ class _VoiceMessageBubbleState extends State<VoiceMessageBubble> {
               children: [
                 _isLoading
                     ? const SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.white,
-                  ),
-                )
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
                     : GestureDetector(
-                  onTap: _togglePlay,
-                  child: Icon(
-                    _isPlaying ? Icons.pause : Icons.play_arrow,
-                    color: Colors.white,
-                    size: 30,
-                  ),
-                ),
+                        onTap: _togglePlay,
+                        child: Icon(
+                          _isPlaying ?  Icons.pause : Icons.play_arrow,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ),
                 const SizedBox(width: 12),
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
@@ -108,7 +117,8 @@ class _VoiceMessageBubbleState extends State<VoiceMessageBubble> {
                   width: 100,
                   child: Row(
                     children: List.generate(20, (index) {
-                      final height = (_isPlaying ? (6 + index % 15) : 10).toDouble();
+                      final height = (_isPlaying ? (6 + index % 15) : 10)
+                          .toDouble();
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 1),
                         child: Container(
@@ -121,7 +131,6 @@ class _VoiceMessageBubbleState extends State<VoiceMessageBubble> {
                   ),
                 ),
                 const SizedBox(width: 8),
-
               ],
             ),
           ),

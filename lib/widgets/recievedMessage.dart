@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_mobile/color.dart';
+import 'package:whatsapp_mobile/widgets/voicePlay.dart';
 
 class ReceivedMessage extends StatelessWidget {
   final String type;         // 'text', 'img', 'video', 'voice'
@@ -66,23 +67,10 @@ class ReceivedMessage extends StatelessWidget {
         );
         break;
       case 'voice':
-        content = Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 160,
-              height: 40,
-              color: Colors.black26,
-              child: const Row(
-                children: [
-                  Icon(Icons.play_arrow, color: Colors.white),
-                  Text("Voice Message", style: TextStyle(color: Colors.white70)),
-                ],
-              ),
-            ),
-            if (duration != null)
-              Text("Duration: $duration", style: const TextStyle(color: Colors.white54, fontSize: 12)),
-          ],
+        content = VoiceMessageBubble(
+          voiceUrl: voiceUrl ?? '',
+          duration: duration ?? '0:00',
+          profileUrl: "https://whatsap.blob.core.windows.net/profilepics/713d99e3-a249-4633-bf61-d2df4e55dd39.jpg",
         );
         break;
       default:
