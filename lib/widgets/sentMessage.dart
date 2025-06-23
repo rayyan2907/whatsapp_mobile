@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:whatsapp_mobile/widgets/voicePlay.dart';
 
 
 class Sentmessage extends StatelessWidget {
@@ -71,25 +72,14 @@ class Sentmessage extends StatelessWidget {
         );
         break;
       case 'voice':
-        content = Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 160,
-              height: 40,
-              color: Colors.black26,
-              child: const Row(
-                children: [
-                  Icon(Icons.play_arrow, color: Colors.white),
-                  Text("Voice Message", style: TextStyle(color: Colors.white70)),
-                ],
-              ),
-            ),
-            if (duration != null)
-              Text("Duration: $duration", style: const TextStyle(color: Colors.white54, fontSize: 12)),
-          ],
+        content = VoiceMessageBubble(
+          voiceUrl: voiceUrl ?? '',
+          duration: duration ?? '0:00',
+          profileUrl: "https://whatsap.blob.core.windows.net/profilepics/713d99e3-a249-4633-bf61-d2df4e55dd39.jpg",
         );
         break;
+
+
       default:
         content = Text(
           textMsg ?? '',
@@ -107,11 +97,11 @@ class Sentmessage extends StatelessWidget {
           elevation: 1,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           color: messageColor,
-          margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           child: Stack(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 10, right: 100, top: 7, bottom: 7),
+                padding: const EdgeInsets.only(left: 10, right: 20, top: 7, bottom: 20),
                 child: content,
               ),
               Positioned(
@@ -119,6 +109,20 @@ class Sentmessage extends StatelessWidget {
                 right: 10,
                 child: Row(
                   children: [
+                    // Duration
+                    Row(
+                      children: [
+                        if (duration != null) ...[
+                          Text(
+                            duration!,
+                            style: const TextStyle(color: Colors.white70, fontSize: 12),
+                          ),
+                          const SizedBox(width: 80),
+                        ],
+                      ],
+                    ),
+
+
                     Text(
                       date,
                       style: const TextStyle(
@@ -126,11 +130,12 @@ class Sentmessage extends StatelessWidget {
                         color: Colors.white60,
                       ),
                     ),
+
                     const SizedBox(width: 5),
                     Icon(
                       Icons.done_all_rounded,
                       size: 15,
-                      color: isSeen ? Color.fromRGBO(65,164,238,1) : Colors.white54,
+                      color: isSeen ? Color.fromRGBO(65,164,220,1) : Colors.white54,
                     ),
                   ],
                 ),

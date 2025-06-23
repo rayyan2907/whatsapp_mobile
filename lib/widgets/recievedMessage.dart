@@ -106,7 +106,7 @@ class ReceivedMessage extends StatelessWidget {
           child: Stack(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 10, right: 30, top: 5, bottom: 20),
+                padding: const EdgeInsets.only(left: 10, right: 20, top: 7, bottom: 20),
                 child: content,
               ),
               Positioned(
@@ -115,7 +115,7 @@ class ReceivedMessage extends StatelessWidget {
                 child: Text(
                   date,
                   style: const TextStyle(
-                    fontSize: 13,
+                    fontSize: 12,
                     color: Colors.white60,
                   ),
                 ),

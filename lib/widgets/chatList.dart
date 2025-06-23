@@ -22,6 +22,8 @@ class Chatlist extends StatelessWidget {
             videoUrl: messages[index]['video_url'].toString(),
             caption: messages[index]['caption'].toString(),
             isSeen: messages[index]['is_seen'] as bool ?? false,
+            duration: messages[index]['duration'].toString(),
+            voiceUrl: messages[index]['voice_url'].toString(),
           );
         }
         else{
@@ -32,6 +34,8 @@ class Chatlist extends StatelessWidget {
               imgUrl: messages[index]['img_url'].toString(),
               videoUrl: messages[index]['video_url'].toString(),
               caption: messages[index]['caption'].toString(),
+              duration: messages[index]['duration'].toString(),
+              voiceUrl: messages[index]['voice_url'].toString(),
             );
         }
       },

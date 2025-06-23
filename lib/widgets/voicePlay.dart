@@ -1,0 +1,132 @@
+import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
+
+class VoiceMessageBubble extends StatefulWidget {
+  final String voiceUrl;
+  final String duration;
+  final String profileUrl;
+
+  const VoiceMessageBubble({
+    super.key,
+    required this.voiceUrl,
+    required this.duration,
+    required this.profileUrl,
+  });
+
+  @override
+  State<VoiceMessageBubble> createState() => _VoiceMessageBubbleState();
+}
+
+class _VoiceMessageBubbleState extends State<VoiceMessageBubble> {
+  late AudioPlayer _player;
+  bool _isPlaying = false;
+  bool _isLoading = false;
+  bool _isLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _player = AudioPlayer();
+    _player.playerStateStream.listen((state) {
+      if (state.processingState == ProcessingState.completed) {
+        setState(() {
+          _isPlaying = false;
+        });
+        _player.seek(Duration.zero);
+      }
+    });
+  }
+
+  Future<void> _togglePlay() async {
+    if (!_isLoaded) {
+      setState(() => _isLoading = true);
+      try {
+        await _player.setUrl(widget.voiceUrl);
+        _isLoaded = true;
+      } catch (e) {
+        print("Error loading audio: $e");
+      }
+      setState(() => _isLoading = false);
+    }
+
+    if (_isPlaying) {
+      await _player.pause();
+    } else {
+      await _player.play();
+    }
+
+    setState(() => _isPlaying = !_isPlaying);
+  }
+
+  @override
+  void dispose() {
+    _player.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        CircleAvatar(
+          radius: 22,
+          backgroundImage: NetworkImage(widget.profileUrl),
+        ),
+        const SizedBox(width: 8),
+        Flexible(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            decoration: BoxDecoration(
+              color: const Color(0xFF005C4B),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _isLoading
+                    ? const SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                )
+                    : GestureDetector(
+                  onTap: _togglePlay,
+                  child: Icon(
+                    _isPlaying ? Icons.pause : Icons.play_arrow,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  height: 28,
+                  width: 100,
+                  child: Row(
+                    children: List.generate(20, (index) {
+                      final height = (_isPlaying ? (6 + index % 15) : 10).toDouble();
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 1),
+                        child: Container(
+                          width: 2,
+                          height: height,
+                          color: Colors.white70,
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+                const SizedBox(width: 8),
+
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
