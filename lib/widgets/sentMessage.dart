@@ -38,7 +38,7 @@ class Sentmessage extends StatelessWidget {
       case 'img':
         content = ImageMessageBubble(
           imageUrl: imgUrl!,
-          caption: caption, time: date,
+          caption: caption,
         );
         break;
       case 'video':

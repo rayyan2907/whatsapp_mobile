@@ -273,7 +273,7 @@ const messages = [
     'is_seen': false,
     'txt_msg': null,
     'img_url': 'https://randomuser.me/api/portraits/men/8.jpg',
-    'caption': 'Snowfall view!',
+    'caption': '',
     'voice_url': null,
     'duration': "",
     'video_url': null,
@@ -319,7 +319,7 @@ const messages = [
     'voice_url': null,
     'duration': "",
     'video_url': null,
-    'is_sent': true,
+    'is_sent': false,
   },
 
 ];
