@@ -5,6 +5,7 @@ import 'package:whatsapp_mobile/widgets/community.dart';
 import 'package:whatsapp_mobile/widgets/contactList.dart';
 import 'package:whatsapp_mobile/widgets/searchBar.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:whatsapp_mobile/widgets/updates.dart';
 
 
 class MobileScreenLayout extends StatefulWidget {
@@ -18,7 +19,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
   int _selectedIndex = 3;
 
   static const List<Widget> _pages = <Widget>[
-    Center(child: Text('Updates Coming Soon')),
+    UpdatesPage(),
     Center(child: Text('Calls Coming Soon')),
     CommunitiesPage(),
     Contactlist(),
