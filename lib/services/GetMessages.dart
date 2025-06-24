@@ -335,6 +335,20 @@ const messages = [
     'video_url': 'https://whatsap.blob.core.windows.net/sentvideos/87ce2daf-2b39-48d1-a58f-47b649dd55ab.mp4',
     'is_sent': true,
   },
+  {
+    'message_id': 9,
+    'reciver_id': 15,
+    'time': '11:30 am',
+    'type': 'video',
+    'is_seen': false,
+    'txt_msg': null,
+    'img_url': null,
+    'caption': 'Check this out!',
+    'voice_url': null,
+    'duration': '00:01:00',
+    'video_url': 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
+    'is_sent': true,
+  },
 
 ];
 

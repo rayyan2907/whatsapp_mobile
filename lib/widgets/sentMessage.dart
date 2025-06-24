@@ -43,7 +43,7 @@ class Sentmessage extends StatelessWidget {
         );
         break;
       case 'video':
-        content = VideoMessageBubble(videoUrl: videoUrl!,caption: caption!,);
+        content = VideoMessageBubble(videoUrl: videoUrl!,caption: caption! );
         break;
       case 'voice':
         content = VoiceMessageBubble(
