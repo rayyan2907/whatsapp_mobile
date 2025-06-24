@@ -59,6 +59,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
                         backgroundColor: Color(0xFF1E1E1E),
                         radius: 16,
                         child: Icon(Icons.camera_alt_outlined, color: Colors.white, size: 19),
+
                       ),
                       const SizedBox(width: 10),
                       const CircleAvatar(

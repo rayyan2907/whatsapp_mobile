@@ -22,37 +22,45 @@ class _VideoMessageBubbleState extends State<VideoMessageBubble> {
   bool _isInitialized = false;
   bool _isPlaying = false;
   bool _showControls = true;
+  bool _hasBeenTapped = false;
+
+  bool _isInitializing = false;
   String _duration = '';
   String _position = '';
 
-  @override
-  void initState() {
-    super.initState();
-    _initializeVideoPlayer();
-  }
+  Future<void> _initializeVideoPlayer() async {
+    if (_isInitialized || _isInitializing) return;
 
-  void _initializeVideoPlayer() async {
+    setState(() {
+      _isInitializing = true;
+    });
+
     try {
       _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
       await _controller!.initialize();
 
-      if (mounted) {
-        setState(() {
-          _isInitialized = true;
-          _duration = _formatDuration(_controller!.value.duration);
-        });
+      if (!mounted) return;
 
-        _controller!.addListener(() {
-          if (mounted) {
-            setState(() {
-              _isPlaying = _controller!.value.isPlaying;
-              _position = _formatDuration(_controller!.value.position);
-            });
-          }
+      _controller!.addListener(() {
+        if (!mounted) return;
+        setState(() {
+          _isPlaying = _controller!.value.isPlaying;
+          _position = _formatDuration(_controller!.value.position);
         });
-      }
+      });
+
+      setState(() {
+        _isInitialized = true;
+        _isInitializing = false;
+        _duration = _formatDuration(_controller!.value.duration);
+      });
+
+      _controller!.play();
     } catch (e) {
       print('Error initializing video: $e');
+      setState(() {
+        _isInitializing = false;
+      });
     }
   }
 
@@ -64,22 +72,16 @@ class _VideoMessageBubbleState extends State<VideoMessageBubble> {
   }
 
   void _togglePlayPause() {
+    if (_isInitializing) return;
+
     if (_controller != null && _isInitialized) {
-      setState(() {
-        if (_isPlaying) {
-          _controller!.pause();
-        } else {
-          _controller!.play();
-        }
-      });
+      _isPlaying ? _controller!.pause() : _controller!.play();
+    } else if (!_hasBeenTapped) {
+      _hasBeenTapped = true;
+      _initializeVideoPlayer();
     }
   }
 
-  void _toggleControls() {
-    setState(() {
-      _showControls = !_showControls;
-    });
-  }
 
   @override
   void dispose() {
@@ -112,39 +114,39 @@ class _VideoMessageBubbleState extends State<VideoMessageBubble> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Video container
             Stack(
               children: [
                 ClipRRect(
                   borderRadius: widget.caption != null
                       ? const BorderRadius.vertical(top: Radius.circular(8))
                       : BorderRadius.circular(8),
-                  child: Container(
-                    width: double.infinity,
-                    height: 200,
-                    color: const Color(0xFF111B21),
-                    child: _isInitialized && _controller != null
-                        ? GestureDetector(
-                      onTap: _toggleControls,
-                      child: AspectRatio(
-                        aspectRatio: _controller!.value.aspectRatio,
-                        child: VideoPlayer(_controller!),
-                      ),
-                    )
-                        : widget.thumbnailUrl != null
-                        ? Image.network(
-                      widget.thumbnailUrl!,
-                      fit: BoxFit.cover,
+                  child: GestureDetector(
+                    onTap: _togglePlayPause,
+                    child: Container(
                       width: double.infinity,
                       height: 200,
-                      errorBuilder: (context, error, stackTrace) => _buildVideoPlaceholder(),
-                    )
-                        : _buildVideoPlaceholder(),
+                      color: const Color(0xFF111B21),
+                      child: _isInitialized && _controller != null
+                          ? AspectRatio(
+                        aspectRatio: _controller!.value.aspectRatio,
+                        child: VideoPlayer(_controller!),
+                      )
+                          : widget.thumbnailUrl != null
+                          ? Image.network(
+                        widget.thumbnailUrl!,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: 200,
+                        errorBuilder: (context, error, stackTrace) =>
+                            _buildVideoPlaceholder(),
+                      )
+                          : _buildVideoPlaceholder(),
+                    ),
                   ),
                 ),
 
-                // Loading indicator
-                if (!_isInitialized)
+                // Show loader only while initializing
+                if (_isInitializing)
                   Positioned.fill(
                     child: Container(
                       color: Colors.black54,
@@ -157,32 +159,27 @@ class _VideoMessageBubbleState extends State<VideoMessageBubble> {
                     ),
                   ),
 
-                // Play/Pause button
-                if (_isInitialized && _showControls)
+                // Play/pause icon
+                if (!_isInitializing && (!_isInitialized || (_showControls && !_isPlaying)))
+
                   Positioned.fill(
-                    child: GestureDetector(
-                      onTap: _togglePlayPause,
+                    child: Center(
                       child: Container(
-                        color: Colors.transparent,
-                        child: Center(
-                          child: Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.7),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              _isPlaying ? Icons.pause : Icons.play_arrow,
-                              color: Colors.white,
-                              size: 32,
-                            ),
-                          ),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.7),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          _isPlaying ? Icons.pause : Icons.play_arrow,
+                          color: Colors.white,
+                          size: 32,
                         ),
                       ),
                     ),
                   ),
 
-                // Video duration
+                // Duration
                 if (_isInitialized)
                   Positioned(
                     top: 8,
@@ -204,7 +201,7 @@ class _VideoMessageBubbleState extends State<VideoMessageBubble> {
                     ),
                   ),
 
-                // Video progress
+                // Position
                 if (_isInitialized && _isPlaying)
                   Positioned(
                     bottom: 8,
@@ -225,29 +222,10 @@ class _VideoMessageBubbleState extends State<VideoMessageBubble> {
                       ),
                     ),
                   ),
-
-                // Video icon overlay (when not playing)
-                if (!_isInitialized)
-                  Positioned(
-                    bottom: 8,
-                    right: 8,
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Icon(
-                        Icons.videocam,
-                        color: Colors.white,
-                        size: 16,
-                      ),
-                    ),
-                  ),
               ],
             ),
 
-            // Caption container
+            // Caption
             if (widget.caption != null)
               Container(
                 width: double.infinity,

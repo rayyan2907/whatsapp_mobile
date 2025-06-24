@@ -335,5 +335,6 @@ const messages = [
     'video_url': 'https://whatsap.blob.core.windows.net/sentvideos/87ce2daf-2b39-48d1-a58f-47b649dd55ab.mp4',
     'is_sent': true,
   },
+
 ];
 

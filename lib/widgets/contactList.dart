@@ -3,6 +3,8 @@ import 'package:whatsapp_mobile/screens/mobile_chat_screen.dart';
 import 'package:whatsapp_mobile/services/contacts.dart';
 import 'package:whatsapp_mobile/widgets/searchBar.dart';
 
+import 'imageViewer.dart';
+
 class Contactlist extends StatelessWidget {
   const Contactlist({super.key});
 
@@ -55,16 +57,34 @@ class Contactlist extends StatelessWidget {
                 style: const TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w300),
               ),
             ),
-            leading: contact['profile_pic'] != null && contact['profile_pic'].toString().isNotEmpty
-                ? CircleAvatar(
-              radius: 22.5,
-              backgroundImage: NetworkImage(contact['profile_pic'].toString()),
-            )
-                : const CircleAvatar(
-              radius: 22.5,
-              backgroundColor: Colors.grey,
-              child: Icon(Icons.person, color: Colors.white),
+            leading: GestureDetector(
+              onTap: () {
+                if (contact['profile_pic'] != null && contact['profile_pic'].toString().isNotEmpty) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ImageViewer(
+                        imageUrl: contact['profile_pic'].toString(),
+                      ),
+                    ),
+                  );
+                }
+              },
+              child: Hero(
+                tag: contact['profile_pic'] ?? 'default_dp_${index - 2}',
+                child: contact['profile_pic'] != null && contact['profile_pic'].toString().isNotEmpty
+                    ? CircleAvatar(
+                  radius: 22.5,
+                  backgroundImage: NetworkImage(contact['profile_pic'].toString()),
+                )
+                    : const CircleAvatar(
+                  radius: 22.5,
+                  backgroundColor: Colors.grey,
+                  child: Icon(Icons.person, color: Colors.white),
+                ),
+              ),
             ),
+
             trailing: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [

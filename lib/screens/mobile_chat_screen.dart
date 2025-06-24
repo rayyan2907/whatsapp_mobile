@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:whatsapp_mobile/widgets/chatList.dart';
 import 'package:whatsapp_mobile/widgets/messageBar.dart';
 
+import '../widgets/imageViewer.dart';
+
 class MobileChatScreen extends StatelessWidget {
   final Map<String, dynamic> user;
 
@@ -22,20 +24,38 @@ class MobileChatScreen extends StatelessWidget {
         ),
         title: Row(
           children: [
-            CircleAvatar(
-              radius: 17.5,
-              backgroundImage:
+            GestureDetector(
+              onTap: () {
+                if (user['profile_pic'] != null &&
+                    user['profile_pic'].toString().isNotEmpty) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ImageViewer(
+                        imageUrl: user['profile_pic'].toString(),
+                      ),
+                    ),
+                  );
+                }
+              },
+              child: Hero(
+                tag: user['profile_pic'] ?? 'default_dp',
+                child: CircleAvatar(
+                  radius: 17.5,
+                  backgroundImage:
                   user['profile_pic'] != null &&
                       user['profile_pic'].toString().isNotEmpty
-                  ? NetworkImage(user['profile_pic'].toString())
-                  : null,
-              backgroundColor: Colors.grey,
-              child:
-                  user['profile_pic'] == null ||
+                      ? NetworkImage(user['profile_pic'].toString())
+                      : null,
+                  backgroundColor: Colors.grey,
+                  child: user['profile_pic'] == null ||
                       user['profile_pic'].toString().isEmpty
-                  ? const Icon(Icons.person, color: Colors.white)
-                  : null,
+                      ? const Icon(Icons.person, color: Colors.white)
+                      : null,
+                ),
+              ),
             ),
+
             const SizedBox(width: 10),
             Expanded(
               child: Column(

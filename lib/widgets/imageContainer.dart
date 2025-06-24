@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'imageViewer.dart';
 
 class ImageMessageBubble extends StatelessWidget {
   final String imageUrl;
   final String? caption;
+
   const ImageMessageBubble({
     super.key,
     required this.imageUrl,
@@ -33,14 +35,22 @@ class ImageMessageBubble extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Image container
-            Stack(
-              children: [
-
-                ClipRRect(
-                  borderRadius: caption != null
-                      ? const BorderRadius.vertical(top: Radius.circular(8))
-                      : BorderRadius.circular(8),
+            // Image container with tap and Hero
+            ClipRRect(
+              borderRadius: caption != null
+                  ? const BorderRadius.vertical(top: Radius.circular(8))
+                  : BorderRadius.circular(8),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ImageViewer(imageUrl: imageUrl),
+                    ),
+                  );
+                },
+                child: Hero(
+                  tag: imageUrl,
                   child: Image.network(
                     imageUrl,
                     fit: BoxFit.cover,
@@ -51,7 +61,6 @@ class ImageMessageBubble extends StatelessWidget {
                       return Container(
                         height: 200,
                         width: double.infinity,
-
                         color: const Color(0xFF111B21),
                         child: const Center(
                           child: CircularProgressIndicator(
@@ -75,9 +84,7 @@ class ImageMessageBubble extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Download/View overlay (optional)
-
-              ],
+              ),
             ),
 
             // Caption container
