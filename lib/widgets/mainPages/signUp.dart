@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:whatsapp_mobile/services/RegistrationService.dart';
+import 'package:whatsapp_mobile/widgets/mainPages/OtpPage.dart';
 import 'package:whatsapp_mobile/widgets/mainPages/login.dart';
 import 'package:intl/intl.dart';
 
@@ -334,6 +335,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           backgroundColor: Colors.green,
                           textColor: Colors.white,
                           fontSize: 16.0,
+                        );
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) =>
+                            OTPVerificationScreen(email: email,),
+                            transitionsBuilder:
+                                (
+                                context,
+                                animation,
+                                secondaryAnimation,
+                                child,
+                                ) {
+                              return FadeTransition(
+                                opacity: animation,
+                                child: child,
+                              );
+                            },
+                            transitionDuration: const Duration(
+                              milliseconds: 500,
+                            ),
+                          ),
+                              (route) => false,
                         );
                       }
                       else {
