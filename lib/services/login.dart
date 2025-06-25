@@ -23,8 +23,6 @@ class LoginService {
         else{
           final message = json.decode(response.body);
           return '${message['message']}';
-
-
         }
 
       }

@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:whatsapp_mobile/services/RegistrationService.dart';
 import 'package:whatsapp_mobile/widgets/mainPages/login.dart';
+import 'package:intl/intl.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -13,6 +14,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  bool _isLoading = false;
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -268,7 +270,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+
                     final first_name = _firstNameController.text.trim();
                     final last_name = _lastNameController.text.trim();
                     final email = _emailController.text.trim();
@@ -303,12 +306,60 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       return;
                     }
 
+                    final birthDateStr = _birthdateController.text.trim();
+                    DateTime? parsedBirthDate;
 
+                    try {
+                      parsedBirthDate = DateFormat(
+                        "dd/MM/yyyy",
+                      ).parseStrict(birthDateStr);
+                      setState(() {
+                        _isLoading = true;
+                      });
 
+                      final isoBirthDate = parsedBirthDate.toUtc().toIso8601String();
 
-
-
-
+                      final msg = await RegistrationService().register(
+                        email,
+                        password,
+                        first_name,
+                        last_name,
+                        isoBirthDate,
+                      );
+                      if (msg=="OTP sent to your email"){
+                        Fluttertoast.showToast(
+                          msg: msg,
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.TOP,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
+                      }
+                      else {
+                        Fluttertoast.showToast(
+                          msg: msg,
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.TOP,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
+                      }
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    } catch (e) {
+                      Fluttertoast.showToast(
+                        msg: "Invalid birthdate format",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.TOP,
+                        backgroundColor: Colors.redAccent,
+                        textColor: Colors.white,
+                        fontSize: 16.0,
+                      );
+                      return;
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF25D366),
@@ -318,10 +369,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     elevation: 0,
                   ),
-                  child: const Text(
-                    'Sign up',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
+                  child: _isLoading
+                      ? const CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        )
+                      : const Text(
+                          'Sign up',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                 ),
               ),
 
