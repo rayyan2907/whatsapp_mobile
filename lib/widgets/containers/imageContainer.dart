@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'imageViewer.dart';
+import '../players/imageViewer.dart';
 
 class ImageMessageBubble extends StatelessWidget {
   final String imageUrl;

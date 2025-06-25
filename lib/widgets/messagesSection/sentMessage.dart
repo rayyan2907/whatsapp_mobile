@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:whatsapp_mobile/widgets/videoContainer.dart';
-import 'package:whatsapp_mobile/widgets/voicePlay.dart';
+import 'package:whatsapp_mobile/widgets/containers/videoContainer.dart';
+import 'package:whatsapp_mobile/widgets/players/voicePlay.dart';
 
-import 'imageContainer.dart';
+import '../containers/imageContainer.dart';
 
 
 class Sentmessage extends StatelessWidget {

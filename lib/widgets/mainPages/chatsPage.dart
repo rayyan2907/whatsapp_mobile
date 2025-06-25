@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_mobile/screens/mobile_chat_screen.dart';
 import 'package:whatsapp_mobile/services/contacts.dart';
-import 'package:whatsapp_mobile/widgets/searchBar.dart';
+import 'package:whatsapp_mobile/widgets/mainPages/searchBar.dart';
 
-import 'imageViewer.dart';
+import '../players/imageViewer.dart';
 
 class Contactlist extends StatelessWidget {
   const Contactlist({super.key});

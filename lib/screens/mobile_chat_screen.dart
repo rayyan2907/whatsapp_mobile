@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:whatsapp_mobile/widgets/chatList.dart';
-import 'package:whatsapp_mobile/widgets/messageBar.dart';
+import 'package:whatsapp_mobile/widgets/messagesSection/chatList.dart';
+import 'package:whatsapp_mobile/widgets/messagesSection/messageBar.dart';
 
-import '../widgets/imageViewer.dart';
+import '../widgets/players/imageViewer.dart';
 
 class MobileChatScreen extends StatelessWidget {
   final Map<String, dynamic> user;

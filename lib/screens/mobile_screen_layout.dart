@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:whatsapp_mobile/color.dart';
-import 'package:whatsapp_mobile/widgets/calls.dart';
-import 'package:whatsapp_mobile/widgets/community.dart';
-import 'package:whatsapp_mobile/widgets/contactList.dart';
-import 'package:whatsapp_mobile/widgets/searchBar.dart';
+import 'package:whatsapp_mobile/widgets/mainPages/calls.dart';
+import 'package:whatsapp_mobile/widgets/mainPages/community.dart';
+import 'package:whatsapp_mobile/widgets/mainPages/chatsPage.dart';
+import 'package:whatsapp_mobile/widgets/mainPages/searchBar.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:whatsapp_mobile/widgets/settings.dart';
-import 'package:whatsapp_mobile/widgets/updates.dart';
+import 'package:whatsapp_mobile/widgets/mainPages/settings.dart';
+import 'package:whatsapp_mobile/widgets/mainPages/updates.dart';
 
 
 class MobileScreenLayout extends StatefulWidget {

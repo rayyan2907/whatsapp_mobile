@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_mobile/services/GetMessages.dart';
-import 'package:whatsapp_mobile/widgets/recievedMessage.dart';
-import 'package:whatsapp_mobile/widgets/sentMessage.dart';
+import 'package:whatsapp_mobile/widgets/messagesSection/recievedMessage.dart';
+import 'package:whatsapp_mobile/widgets/messagesSection/sentMessage.dart';
 
 class Chatlist extends StatelessWidget {
   const Chatlist({super.key});

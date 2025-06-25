@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'package:whatsapp_mobile/widgets/videoPlayer.dart';
+import 'package:whatsapp_mobile/widgets/players/videoPlayer.dart';
 
 class VideoMessageBubble extends StatelessWidget {
   final String? videoUrl;
