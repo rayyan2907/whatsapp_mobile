@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp_mobile/color.dart';
+import 'package:whatsapp_mobile/widgets/mainPages/login.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -78,8 +81,23 @@ class SettingsPage extends StatelessWidget {
               child: ListTile(
                 leading: const Icon(CupertinoIcons.arrow_right_square, color: Colors.redAccent),
                 title: const Text("Log out", style: TextStyle(color: Colors.redAccent,fontSize: 16)),
-                onTap: () {
-                  // Add log out logic
+                onTap: () async{
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.clear();
+                  Fluttertoast.showToast(
+                    msg: "Logged out successfully",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.TOP,
+                    backgroundColor: Colors.green,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginScreen()),
+                        (route) => false,
+                  );
                 },
               ),
             ),

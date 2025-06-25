@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:whatsapp_mobile/color.dart';
+import 'package:whatsapp_mobile/screens/mobile_screen_layout.dart';
+import 'package:whatsapp_mobile/services/login.dart';
+import 'package:whatsapp_mobile/widgets/mainPages/chatsPage.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -14,7 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
-
+  bool _isLoading = false;
   @override
   void dispose() {
     _emailController.dispose();
@@ -138,9 +141,53 @@ class _LoginScreenState extends State<LoginScreen> {
                           width: double.infinity,
                           height: 50,
                           child: ElevatedButton(
-                            onPressed: () {
-                              print('Email: ${_emailController.text}');
-                              print('Password: ${_passwordController.text}');
+                            onPressed: () async{
+                              final email = _emailController.text.trim();
+                              final password = _passwordController.text.trim();
+                              if (email.isEmpty || password.isEmpty) {
+                                Fluttertoast.showToast(
+                                  msg: "All fields required",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.TOP,
+                                  backgroundColor: Colors.redAccent,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0,
+                                );
+                              }
+                              else{
+                                setState(() {
+                                  _isLoading=true;
+                                });
+                              }
+                              final login = LoginService();
+                              final msg = await login.login(email, password);
+                              setState(() {
+                                _isLoading=false;
+                              });
+
+                                if (msg=='Login Successful'){
+                                  Fluttertoast.showToast(
+                                    msg: msg,
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.TOP,
+                                    backgroundColor: Colors.green,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0,
+                                  );
+                                  Navigator.pushReplacement(context, 
+                                  MaterialPageRoute(builder: (context)=> MobileScreenLayout(),),);
+                                }
+                                else{
+                                  Fluttertoast.showToast(
+                                    msg: msg,
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.TOP,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0,
+                                  );
+                                }
+
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF25D366),
@@ -150,11 +197,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               elevation: 0,
                             ),
-                            child: const Text(
+                            child:_isLoading
+                                ? const CircularProgressIndicator(color: Colors.white,strokeWidth: 2,)
+                                : const Text(
                               'Log in',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
+                                color: Colors.white,
                               ),
                             ),
                           ),
@@ -165,13 +215,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextButton(
                           onPressed: () {
                             Fluttertoast.showToast(
-                              msg: "All fields are required",
+                              msg:
+                                  "Password reset screen is under developement",
                               toastLength: Toast.LENGTH_SHORT,
                               gravity: ToastGravity.TOP,
                               backgroundColor: Colors.redAccent,
                               textColor: Colors.white,
                               fontSize: 16.0,
-
                             );
                           },
                           child: const Text(
