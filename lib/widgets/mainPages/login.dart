@@ -272,7 +272,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           child: child,
                                         );
                                       },
-                                      transitionDuration: const Duration(milliseconds: 500),
+                                      transitionDuration: const Duration(milliseconds: 100),
                                     ),
                                         (route) => false,
                                   );

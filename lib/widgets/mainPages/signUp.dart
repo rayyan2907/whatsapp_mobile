@@ -447,7 +447,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   );
                                 },
                             transitionDuration: const Duration(
-                              milliseconds: 500,
+                              milliseconds: 100,
                             ),
                           ),
                           (route) => false,

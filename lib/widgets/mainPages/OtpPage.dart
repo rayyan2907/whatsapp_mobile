@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:async';
 
 import 'package:whatsapp_mobile/color.dart';
+import 'package:whatsapp_mobile/services/otpService.dart';
 
 import 'login.dart';
 
@@ -16,6 +18,8 @@ class OTPVerificationScreen extends StatefulWidget {
 }
 
 class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
+  bool _isLoading= false;
+
   final List<TextEditingController> _controllers = List.generate(
     6,
     (index) => TextEditingController(),
@@ -84,44 +88,61 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
     }
   }
 
-  void _verifyOTP() {
+  void _verifyOTP() async {
     if (_otpCode.length == 6) {
-      // Handle OTP verification logic here
-      print('OTP Code: $_otpCode');
-      // You can add your verification API call here
-      _showVerificationResult();
+        setState(() {
+          _isLoading=true;
+        });
+       final msg = await OtpService().verifyOtp(widget.email!, _otpCode);
+      _showVerificationResult(msg);
+      setState(() {
+        _isLoading=false;
+      });
     } else {
       _showError('Please enter the complete 6-digit code');
     }
   }
 
-  void _showVerificationResult() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: backgroundColor,
-        title: const Text(
-          'Verification Successful',
-          style: TextStyle(color: Colors.white),
-        ),
-        content: const Text(
-          'Your account has been verified successfully!',
-          style: TextStyle(color: Color(0xFF8696A0)),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              // Navigate to main app
-            },
-            child: const Text(
-              'Continue',
-              style: TextStyle(color: Color(0xFF25D366)),
+  void _showVerificationResult(String msg) {
+    if(msg=='success') {
+      showDialog(
+        context: context,
+        builder: (context) =>
+            AlertDialog(
+              backgroundColor: Color(0xFF1F2C34),
+              title: const Text(
+                'Verification Successful',
+                style: TextStyle(color: Colors.white),
+              ),
+              content: const Text(
+                'Your account has been verified successfully!',
+                style: TextStyle(color: Color(0xFF8696A0)),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    // Navigate to main app
+                  },
+                  child: const Text(
+                    'Continue',
+                    style: TextStyle(color: Color(0xFF25D366)),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-    );
+      );
+    }
+    else{
+      Fluttertoast.showToast(
+        msg: msg,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
   }
 
   void _showError(String message) {
@@ -162,7 +183,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0B141A),
+      backgroundColor: backgroundColor,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -290,13 +311,20 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                               ),
                               elevation: 0,
                             ),
-                            child: const Text(
+                            child: _isLoading
+                                ? const CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            )
+                                : const Text(
                               'Verify Account',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
+
+
                           ),
                         ),
 
@@ -378,7 +406,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                                             );
                                           },
                                       transitionDuration: const Duration(
-                                        milliseconds: 500,
+                                        milliseconds: 100,
                                       ),
                                     ),
                                     (route) => false,
