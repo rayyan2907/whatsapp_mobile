@@ -7,6 +7,7 @@ import 'package:whatsapp_mobile/services/getUser.dart';
 import 'package:whatsapp_mobile/services/logOutService.dart';
 import 'package:whatsapp_mobile/widgets/mainPages/login.dart';
 
+import '../players/imageViewer.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -16,8 +17,8 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  String fullName='';
-  String pic_url='';
+  String fullName = '';
+  String pic_url = '';
 
   @override
   void initState() {
@@ -32,13 +33,13 @@ class _SettingsPageState extends State<SettingsPage> {
     if (user != null) {
       setState(() {
         fullName = "${user['first_name']} ${user['last_name']}";
+
         pic_url = user['profile_pic_url'];
       });
     } else {
-        await LogoutService.logout(context);
+      await LogoutService.logout(context);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -67,12 +68,32 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               child: Row(
                 children: [
-                   CircleAvatar(
-                    radius: 25,
-                    backgroundImage: NetworkImage(
-                      pic_url,
+                  GestureDetector(
+                    onTap: () {
+                      if (pic_url.isNotEmpty) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => ImageViewer(imageUrl: pic_url),
+                          ),
+                        );
+                      }
+                    },
+                    child: Hero(
+                      tag: 'profile-pic-hero',
+                      child: CircleAvatar(
+                        radius: 25,
+                        backgroundColor: Colors.grey.shade800,
+                        backgroundImage: pic_url.isNotEmpty
+                            ? NetworkImage(pic_url)
+                            : null,
+                        child: pic_url.isEmpty
+                            ? const Icon(Icons.person, color: Colors.white)
+                            : null,
+                      ),
                     ),
                   ),
+
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -130,7 +151,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
 
                 onTap: () async {
-
                   showDialog(
                     context: context,
                     barrierDismissible: false,

@@ -5,6 +5,7 @@ import 'package:whatsapp_mobile/color.dart';
 
 import '../../services/getUser.dart';
 import '../../services/logOutService.dart';
+import '../players/imageViewer.dart';
 
 class UpdatesPage extends StatefulWidget {
   const UpdatesPage({super.key});
@@ -63,10 +64,32 @@ class _UpdatesPageState extends State<UpdatesPage> {
               children: [
                 Stack(
                   children: [
-                    CircleAvatar(
-                      radius: 25,
-                      backgroundImage: NetworkImage(pic_url),
+                    GestureDetector(
+                      onTap: () {
+                        if (pic_url.isNotEmpty) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ImageViewer(imageUrl: pic_url),
+                            ),
+                          );
+                        }
+                      },
+                      child: Hero(
+                        tag: 'profile-pic-hero',
+                        child: CircleAvatar(
+                          radius: 25,
+                          backgroundColor: Colors.grey.shade800,
+                          backgroundImage: pic_url.isNotEmpty
+                              ? NetworkImage(pic_url)
+                              : null,
+                          child: pic_url.isEmpty
+                              ? const Icon(Icons.person, color: Colors.white)
+                              : null,
+                        ),
+                      ),
                     ),
+
                     Positioned(
                       bottom: 0,
                       right: 0,
