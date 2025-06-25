@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:whatsapp_mobile/responsive/responsive_layout.dart';
 import 'package:whatsapp_mobile/screens/mobile_screen_layout.dart';
 import 'package:whatsapp_mobile/screens/web_screen_layout.dart';
 import 'package:whatsapp_mobile/widgets/mainPages/login.dart';
+import 'services/jwtExpire.dart';
 
 
 void main() {
@@ -22,8 +24,21 @@ class MyApp extends StatelessWidget {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('jwt');
       if (token != null && token.isNotEmpty) {
-        return const ResponsiveLayout(MobileScreenLayout: MobileScreenLayout(),
-            WebScreenLayout: WebScreenLayout());
+        if (!jwtCheck.isJwtExpired(token)) {
+          return const ResponsiveLayout(
+              MobileScreenLayout: MobileScreenLayout(),
+              WebScreenLayout: WebScreenLayout());
+        }
+        else{
+          Fluttertoast.showToast(
+            msg: "Session Expired",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+        }
       }
       else {
         return const LoginScreen();
