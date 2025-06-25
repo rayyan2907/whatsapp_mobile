@@ -4,7 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:whatsapp_mobile/screens/mobile_screen_layout.dart';
 import 'package:whatsapp_mobile/services/login.dart';
-import 'package:whatsapp_mobile/widgets/mainPages/chatsPage.dart';
+import 'signUp.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -247,7 +248,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               color: const Color(0xFF2A3942),
                               width: 1,
                             ),
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(25),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -261,7 +262,21 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  print('Sign up tapped');
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    PageRouteBuilder(
+                                      pageBuilder: (context, animation, secondaryAnimation) => const SignUpScreen(),
+                                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                        return FadeTransition(
+                                          opacity: animation,
+                                          child: child,
+                                        );
+                                      },
+                                      transitionDuration: const Duration(milliseconds: 500),
+                                    ),
+                                        (route) => false,
+                                  );
+
                                 },
                                 child: const Text(
                                   'Sign up',
@@ -281,7 +296,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 8),
 
                         const Text(
-                          '© 2024 WhatsApp - Clone',
+                          '© 2025 WhatsApp - Clone',
                           style: TextStyle(color: Colors.white60, fontSize: 12),
                         ),
 
