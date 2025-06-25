@@ -3,10 +3,43 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp_mobile/color.dart';
+import 'package:whatsapp_mobile/services/getUser.dart';
+import 'package:whatsapp_mobile/services/logOutService.dart';
 import 'package:whatsapp_mobile/widgets/mainPages/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
+
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  String fullName='';
+  String pic_url='';
+
+  @override
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    final user = await GetUser.getLoggedInUser();
+    print(user);
+    if (user != null) {
+      setState(() {
+        fullName = "${user['first_name']} ${user['last_name']}";
+        pic_url = user['profile_pic_url'];
+      });
+    } else {
+        await LogoutService.logout(context);
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -35,21 +68,27 @@ class SettingsPage extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const CircleAvatar(
+                   CircleAvatar(
                     radius: 25,
-                    backgroundImage: NetworkImage("https://i.pravatar.cc/150?img=1"),
+                    backgroundImage: NetworkImage(
+                      pic_url,
+                    ),
                   ),
                   const SizedBox(width: 12),
-                  const Expanded(
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Rayyan",
-                          style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),
+                          fullName,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                        SizedBox(height: 4),
-                        Text(
+                        const SizedBox(height: 4),
+                        const Text(
                           "Hi, there I am using whatsapp",
                           style: TextStyle(color: Colors.white60, fontSize: 14),
                         ),
@@ -67,7 +106,10 @@ class SettingsPage extends StatelessWidget {
 
               child: ListTile(
                 leading: const Icon(CupertinoIcons.photo, color: Colors.white),
-                title: const Text("Change Profile Picture", style: TextStyle(color: Colors.white,fontSize: 16)),
+                title: const Text(
+                  "Change Profile Picture",
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
                 onTap: () {
                   // Add logic to open image picker
                 },
@@ -79,9 +121,22 @@ class SettingsPage extends StatelessWidget {
               color: const Color(0xFF121212),
 
               child: ListTile(
-                leading: const Icon(CupertinoIcons.arrow_right_square, color: Colors.redAccent),
-                title: const Text("Log out", style: TextStyle(color: Colors.redAccent,fontSize: 16)),
-                onTap: () async{
+                leading: const Icon(
+                  CupertinoIcons.arrow_right_square,
+                  color: Colors.redAccent,
+                ),
+                title: const Text(
+                  "Log out",
+                  style: TextStyle(color: Colors.redAccent, fontSize: 16),
+                ),
+                onTap: () async {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) => const Center(
+                      child: CircularProgressIndicator(color: Colors.green),
+                    ),
+                  );
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.clear();
                   Fluttertoast.showToast(
@@ -95,8 +150,10 @@ class SettingsPage extends StatelessWidget {
 
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => const LoginScreen()),
-                        (route) => false,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
+                    ),
+                    (route) => false,
                   );
                 },
               ),
