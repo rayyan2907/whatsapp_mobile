@@ -1,9 +1,38 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:whatsapp_mobile/color.dart';
 
-class UpdatesPage extends StatelessWidget {
+import '../../services/getUser.dart';
+import '../../services/logOutService.dart';
+
+class UpdatesPage extends StatefulWidget {
   const UpdatesPage({super.key});
+
+  @override
+  State<UpdatesPage> createState() => _UpdatesPageState();
+}
+
+class _UpdatesPageState extends State<UpdatesPage> {
+  String pic_url = '';
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    final user = await GetUser.getLoggedInUser();
+    print(user);
+    if (user != null) {
+      setState(() {
+        pic_url = user['profile_pic_url'];
+      });
+    } else {
+      await LogoutService.logout(context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +54,6 @@ class UpdatesPage extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-
               ],
             ),
             const SizedBox(height: 20),
@@ -35,9 +63,9 @@ class UpdatesPage extends StatelessWidget {
               children: [
                 Stack(
                   children: [
-                    const CircleAvatar(
+                    CircleAvatar(
                       radius: 25,
-                      backgroundImage: NetworkImage("https://i.pravatar.cc/150?img=1"),
+                      backgroundImage: NetworkImage(pic_url),
                     ),
                     Positioned(
                       bottom: 0,
@@ -45,9 +73,13 @@ class UpdatesPage extends StatelessWidget {
                       child: CircleAvatar(
                         radius: 10,
                         backgroundColor: Colors.green,
-                        child: const Icon(CupertinoIcons.add, size: 16, color: Colors.white),
+                        child: const Icon(
+                          CupertinoIcons.add,
+                          size: 16,
+                          color: Colors.white,
+                        ),
                       ),
-                    )
+                    ),
                   ],
                 ),
                 const SizedBox(width: 12),
@@ -55,19 +87,55 @@ class UpdatesPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("My status", style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500)),
+                      Text(
+                        "My status",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                       SizedBox(height: 4),
-                      Text("Add to my status", style: TextStyle(color: Colors.white60)),
+                      Text(
+                        "Add to my status",
+                        style: TextStyle(color: Colors.white60),
+                      ),
                     ],
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(CupertinoIcons.camera_fill, color: Colors.white,size: 19 ,),
-                  onPressed: () {},
+                  icon: const Icon(
+                    CupertinoIcons.camera_fill,
+                    color: Colors.white,
+                    size: 19,
+                  ),
+                  onPressed: () {
+                    Fluttertoast.showToast(
+                      msg: "Comming soon",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.TOP,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
+                    );
+                  },
                 ),
                 IconButton(
-                  icon: const Icon(CupertinoIcons.pencil, color: Colors.white,size: 21,),
-                  onPressed: () {},
+                  icon: const Icon(
+                    CupertinoIcons.pencil,
+                    color: Colors.white,
+                    size: 21,
+                  ),
+                  onPressed: () {
+                    Fluttertoast.showToast(
+                      msg: "Comming soon",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.TOP,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
+                    );
+                  },
                 ),
               ],
             ),
@@ -76,7 +144,10 @@ class UpdatesPage extends StatelessWidget {
             // Recent Updates Header
             const Text(
               "Recent updates",
-              style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                color: Colors.white70,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             const SizedBox(height: 12),
 
@@ -117,11 +188,28 @@ class UpdatesPage extends StatelessWidget {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
+                ),
               ),
-              onPressed: () {},
-              child: const Text("Explore more", style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                Fluttertoast.showToast(
+                  msg: "Comming soon",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.TOP,
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
+                  fontSize: 16.0,
+                );
+              },
+              child: const Text(
+                "Explore more",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),
@@ -129,5 +217,3 @@ class UpdatesPage extends StatelessWidget {
     );
   }
 }
-
-

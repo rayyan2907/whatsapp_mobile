@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:whatsapp_mobile/color.dart';
 
 class CommunitiesPage extends StatelessWidget {
@@ -19,7 +20,7 @@ class CommunitiesPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 10,10),
+                    padding: const EdgeInsets.fromLTRB(0, 0, 10, 10),
                     child: const Text(
                       "Communities",
                       style: TextStyle(
@@ -29,7 +30,6 @@ class CommunitiesPage extends StatelessWidget {
                       ),
                     ),
                   ),
-
                 ],
               ),
               const SizedBox(height: 40),
@@ -43,7 +43,11 @@ class CommunitiesPage extends StatelessWidget {
                     color: const Color(0xFF1E1E1E),
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: const Icon(Icons.groups, color: Colors.green, size: 60),
+                  child: const Icon(
+                    Icons.groups,
+                    color: Colors.green,
+                    size: 60,
+                  ),
                 ),
               ),
               const SizedBox(height: 30),
@@ -66,10 +70,7 @@ class CommunitiesPage extends StatelessWidget {
               const Center(
                 child: Text(
                   "Communities bring members together in topic-\nbased groups. Any community you're added to\nwill appear here.",
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 14,
-                  ),
+                  style: TextStyle(color: Colors.white70, fontSize: 14),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -79,7 +80,14 @@ class CommunitiesPage extends StatelessWidget {
               Center(
                 child: GestureDetector(
                   onTap: () {
-                    // Action for "See example communities"
+                    Fluttertoast.showToast(
+                      msg: "Comming Soon",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.TOP,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
+                    );
                   },
                   child: const Text(
                     "See example communities >",
@@ -102,7 +110,16 @@ class CommunitiesPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(25),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Fluttertoast.showToast(
+                      msg: "Comming Soon",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.TOP,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
+                    );
+                  },
                   icon: const Icon(Icons.add, color: Colors.white),
                   label: const Text(
                     "New Community",

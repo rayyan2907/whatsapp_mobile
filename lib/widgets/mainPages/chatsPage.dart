@@ -29,12 +29,7 @@ class Contactlist extends StatelessWidget {
         } else if (index == 1) {
           return const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              children: [
-                WhatsAppSearchBar(),
-                SizedBox(height: 8,)
-              ],
-            ),
+            child: Column(children: [WhatsAppSearchBar(), SizedBox(height: 8)]),
           );
         }
 
@@ -42,24 +37,35 @@ class Contactlist extends StatelessWidget {
         return InkWell(
           onTap: () {
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => MobileChatScreen(user: contact)),
+              MaterialPageRoute(
+                builder: (context) => MobileChatScreen(user: contact),
+              ),
             );
           },
           child: ListTile(
             title: Text(
               contact['name'].toString(),
-              style: const TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.w400),
+              style: const TextStyle(
+                fontSize: 15,
+                color: Colors.white,
+                fontWeight: FontWeight.w400,
+              ),
             ),
             subtitle: Padding(
               padding: const EdgeInsets.only(top: 1),
               child: Text(
                 contact['message'].toString(),
-                style: const TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w300),
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w300,
+                ),
               ),
             ),
             leading: GestureDetector(
               onTap: () {
-                if (contact['profile_pic'] != null && contact['profile_pic'].toString().isNotEmpty) {
+                if (contact['profile_pic'] != null &&
+                    contact['profile_pic'].toString().isNotEmpty) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -72,16 +78,20 @@ class Contactlist extends StatelessWidget {
               },
               child: Hero(
                 tag: contact['profile_pic'] ?? 'default_dp_${index - 2}',
-                child: contact['profile_pic'] != null && contact['profile_pic'].toString().isNotEmpty
+                child:
+                    contact['profile_pic'] != null &&
+                        contact['profile_pic'].toString().isNotEmpty
                     ? CircleAvatar(
-                  radius: 22.5,
-                  backgroundImage: NetworkImage(contact['profile_pic'].toString()),
-                )
+                        radius: 22.5,
+                        backgroundImage: NetworkImage(
+                          contact['profile_pic'].toString(),
+                        ),
+                      )
                     : const CircleAvatar(
-                  radius: 22.5,
-                  backgroundColor: Colors.grey,
-                  child: Icon(Icons.person, color: Colors.white),
-                ),
+                        radius: 22.5,
+                        backgroundColor: Colors.grey,
+                        child: Icon(Icons.person, color: Colors.white),
+                      ),
               ),
             ),
 

@@ -20,7 +20,6 @@ class _SettingsPageState extends State<SettingsPage> {
   String pic_url='';
 
   @override
-  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -89,7 +88,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                         const SizedBox(height: 4),
                         const Text(
-                          "Hi, there I am using whatsapp",
+                          "Hi, there I am using whatsapp clone",
                           style: TextStyle(color: Colors.white60, fontSize: 14),
                         ),
                       ],
@@ -129,7 +128,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   "Log out",
                   style: TextStyle(color: Colors.redAccent, fontSize: 16),
                 ),
+
                 onTap: () async {
+
                   showDialog(
                     context: context,
                     barrierDismissible: false,
@@ -137,6 +138,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       child: CircularProgressIndicator(color: Colors.green),
                     ),
                   );
+                  await Future.delayed(const Duration(seconds: 1));
+
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.clear();
                   Fluttertoast.showToast(

@@ -141,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           width: double.infinity,
                           height: 50,
                           child: ElevatedButton(
-                            onPressed: () async{
+                            onPressed: () async {
                               final email = _emailController.text.trim();
                               final password = _passwordController.text.trim();
                               if (email.isEmpty || password.isEmpty) {
@@ -153,41 +153,42 @@ class _LoginScreenState extends State<LoginScreen> {
                                   textColor: Colors.white,
                                   fontSize: 16.0,
                                 );
-                              }
-                              else{
+                              } else {
                                 setState(() {
-                                  _isLoading=true;
+                                  _isLoading = true;
                                 });
                               }
                               final login = LoginService();
                               final msg = await login.login(email, password);
                               setState(() {
-                                _isLoading=false;
+                                _isLoading = false;
                               });
 
-                                if (msg=='Login Successful'){
-                                  Fluttertoast.showToast(
-                                    msg: msg,
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.TOP,
-                                    backgroundColor: Colors.green,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0,
-                                  );
-                                  Navigator.pushReplacement(context, 
-                                  MaterialPageRoute(builder: (context)=> MobileScreenLayout(),),);
-                                }
-                                else{
-                                  Fluttertoast.showToast(
-                                    msg: msg,
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.TOP,
-                                    backgroundColor: Colors.red,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0,
-                                  );
-                                }
-
+                              if (msg == 'Login Successful') {
+                                Fluttertoast.showToast(
+                                  msg: msg,
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.TOP,
+                                  backgroundColor: Colors.green,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0,
+                                );
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => MobileScreenLayout(),
+                                  ),
+                                );
+                              } else {
+                                Fluttertoast.showToast(
+                                  msg: msg,
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.TOP,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0,
+                                );
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF25D366),
@@ -197,16 +198,19 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               elevation: 0,
                             ),
-                            child:_isLoading
-                                ? const CircularProgressIndicator(color: Colors.white,strokeWidth: 2,)
+                            child: _isLoading
+                                ? const CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  )
                                 : const Text(
-                              'Log in',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white,
-                              ),
-                            ),
+                                    'Log in',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                           ),
                         ),
 

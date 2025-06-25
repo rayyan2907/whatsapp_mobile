@@ -8,28 +8,25 @@ import 'package:whatsapp_mobile/screens/web_screen_layout.dart';
 import 'package:whatsapp_mobile/widgets/mainPages/login.dart';
 import 'services/jwtExpire.dart';
 
-
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-
-  Future<Widget> getHomeScreen() async{
+  Future<Widget> getHomeScreen() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('jwt');
       if (token != null && token.isNotEmpty) {
         if (!jwtCheck.isJwtExpired(token)) {
           return const ResponsiveLayout(
-              MobileScreenLayout: MobileScreenLayout(),
-              WebScreenLayout: WebScreenLayout());
-        }
-        else{
+            MobileScreenLayout: MobileScreenLayout(),
+            WebScreenLayout: WebScreenLayout(),
+          );
+        } else {
           Fluttertoast.showToast(
             msg: "Session Expired",
             toastLength: Toast.LENGTH_SHORT,
@@ -38,20 +35,16 @@ class MyApp extends StatelessWidget {
             textColor: Colors.white,
             fontSize: 16.0,
           );
+          return const LoginScreen();
         }
-      }
-      else {
+      } else {
         return const LoginScreen();
       }
-    }
-    catch(e){
+    } catch (e) {
       debugPrint("Error in getHomeScreen(): $e");
-      return const Scaffold(
-        body: Center(child: Text("Error loading screen")),
-      );
+      return const Scaffold(body: Center(child: Text("Error loading screen")));
     }
   }
-
 
   // This widget is the root of your application.
   @override
@@ -60,17 +53,18 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Whatsapp',
       theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor:  backgroundColor,
+        scaffoldBackgroundColor: backgroundColor,
       ),
-      home: FutureBuilder(future: getHomeScreen(), builder: (context,snapshot){
-        if(snapshot.connectionState==ConnectionState.waiting){
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator(color: Colors.green,),),
-          );
-
-        }
-        else
-          {
+      home: FutureBuilder(
+        future: getHomeScreen(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(color: Colors.green),
+              ),
+            );
+          } else {
             if (snapshot.hasData && snapshot.data != null) {
               return snapshot.data!;
             } else {
@@ -78,9 +72,9 @@ class MyApp extends StatelessWidget {
                 body: Center(child: Text("Something went wrong")),
               );
             }
-
           }
-      })
+        },
+      ),
     );
   }
 }

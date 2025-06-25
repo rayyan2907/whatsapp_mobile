@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:whatsapp_mobile/color.dart';
 
 class CallsPage extends StatelessWidget {
@@ -27,18 +28,43 @@ class CallsPage extends StatelessWidget {
             // Favourites section
             const Text(
               "Favourites",
-              style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                color: Colors.white70,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             const SizedBox(height: 12),
+
             Row(
               children: [
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.white24,
-                  child: Icon(CupertinoIcons.add, color: Colors.white),
+                InkWell(
+                  onTap: () {
+                    Fluttertoast.showToast(
+                      msg: "Comming Soon",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.TOP,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
+                    );
+                  },
+                  borderRadius: BorderRadius.circular(12),
+                  splashColor: Colors.white10,
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.white24,
+                        child: Icon(CupertinoIcons.add, color: Colors.white),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(width: 12),
-                const Text("Add favourite", style: TextStyle(color: Colors.white)),
+                const Text(
+                  "Add favourite",
+                  style: TextStyle(color: Colors.white),
+                ),
               ],
             ),
             const SizedBox(height: 30),
@@ -46,7 +72,10 @@ class CallsPage extends StatelessWidget {
             // Recent Calls Header
             const Text(
               "Recent",
-              style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                color: Colors.white70,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             const SizedBox(height: 12),
 
