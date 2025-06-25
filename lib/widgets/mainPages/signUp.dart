@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:whatsapp_mobile/color.dart';
-import 'package:whatsapp_mobile/services/login.dart';
+import 'package:whatsapp_mobile/services/RegistrationService.dart';
 import 'package:whatsapp_mobile/widgets/mainPages/login.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -268,12 +269,46 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Handle sign up logic here
-                    print('First Name: ${_firstNameController.text}');
-                    print('Last Name: ${_lastNameController.text}');
-                    print('Email: ${_emailController.text}');
-                    print('Password: ${_passwordController.text}');
-                    print('Birthdate: ${_birthdateController.text}');
+                    final first_name = _firstNameController.text.trim();
+                    final last_name = _lastNameController.text.trim();
+                    final email = _emailController.text.trim();
+                    final password = _passwordController.text.trim();
+                    final birthDate = _birthdateController.text.trim();
+
+                    if (first_name.isEmpty ||
+                        last_name.isEmpty ||
+                        email.isEmpty ||
+                        password.isEmpty ||
+                        birthDate.isEmpty) {
+                      Fluttertoast.showToast(
+                        msg: "All fields are required",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.TOP,
+                        backgroundColor: Colors.redAccent,
+                        textColor: Colors.white,
+                        fontSize: 16.0,
+                      );
+                      return;
+                    }
+
+                    if (password.length < 8) {
+                      Fluttertoast.showToast(
+                        msg: "Password must be at least 8 characters",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.TOP,
+                        backgroundColor: Colors.redAccent,
+                        textColor: Colors.white,
+                        fontSize: 16.0,
+                      );
+                      return;
+                    }
+
+
+
+
+
+
+
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF25D366),

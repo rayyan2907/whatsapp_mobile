@@ -147,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               final password = _passwordController.text.trim();
                               if (email.isEmpty || password.isEmpty) {
                                 Fluttertoast.showToast(
-                                  msg: "All fields required",
+                                  msg: "All fields are required",
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.TOP,
                                   backgroundColor: Colors.redAccent,
