@@ -3,16 +3,16 @@ import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 import 'dart:io';
 
-class WhatsAppImagePicker extends StatefulWidget {
+class WhatsAppDpPicker extends StatefulWidget {
   final Function(List<File>) onImagesSelected;
 
-  const WhatsAppImagePicker({Key? key, required this.onImagesSelected}) : super(key: key);
+  const WhatsAppDpPicker({Key? key, required this.onImagesSelected}) : super(key: key);
 
   @override
-  State<WhatsAppImagePicker> createState() => _WhatsAppImagePickerState();
+  State<WhatsAppDpPicker> createState() => _WhatsAppDpPickerState();
 }
 
-class _WhatsAppImagePickerState extends State<WhatsAppImagePicker> {
+class _WhatsAppDpPickerState extends State<WhatsAppDpPicker> {
   List<AssetEntity> displayedImages = [];
   List<AssetEntity> selectedImages = [];
   List<AssetPathEntity> albums = [];

@@ -5,6 +5,8 @@ import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:whatsapp_mobile/color.dart';
+import '../Selectors/dpSelector.dart';
+import '../Selectors/imageSelector.dart';
 import 'login.dart';
 
 class ProfilePictureScreen extends StatefulWidget {
@@ -33,6 +35,22 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
       _showError('Error picking image: $e');
     }
   }
+  void _openWhatsAppDpPicker() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => WhatsAppDpPicker(
+        onImagesSelected: (images) {
+          if (images.isNotEmpty) {
+            setState(() {
+              _selectedImage = images.first;
+            });
+          }
+        },
+      ),
+    );
+  }
 
   void _showImagePicker() {
     showModalBottomSheet(
@@ -47,7 +65,7 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 40,
+              width: 55,
               height: 4,
               decoration: BoxDecoration(
                 color: const Color(0xFF8696A0),
@@ -80,7 +98,7 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                   label: 'Gallery',
                   onTap: () {
                     Navigator.pop(context);
-                    _simulateImageSelection('gallery');
+                    _openWhatsAppDpPicker();
                   },
                 ),
               ],
@@ -432,37 +450,24 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
 
   Widget _buildSelectedImage() {
     return Container(
+      width: 150,
+      height: 150,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25),
-        color: Colors.grey.shade200,
+        shape: BoxShape.circle,
+        image: DecorationImage(
+          image: FileImage(_selectedImage!),
+          fit: BoxFit.cover,
+        ),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 80,
-            height: 80,
-            decoration: const BoxDecoration(
-              color: Color(0xFF25D366),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(Icons.check, color: Colors.white, size: 40),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Image Selected',
-            style: TextStyle(
-              color: Colors.grey.shade700,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Tap to change',
-            style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
-          ),
-        ],
+      alignment: Alignment.bottomRight,
+      padding: const EdgeInsets.all(10),
+      child: Container(
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+          color: Color(0xFF25D366),
+        ),
+        padding: const EdgeInsets.all(6),
+        child: const Icon(Icons.check, color: Colors.white, size: 18),
       ),
     );
   }
