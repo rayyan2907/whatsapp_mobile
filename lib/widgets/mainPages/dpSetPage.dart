@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:whatsapp_mobile/color.dart';
+import 'package:whatsapp_mobile/services/dpSetService.dart';
+import 'package:whatsapp_mobile/widgets/Selectors/cameraSelector.dart';
 import '../Selectors/dpSelector.dart';
 import '../Selectors/imageSelector.dart';
 import 'login.dart';
@@ -18,6 +21,7 @@ class ProfilePictureScreen extends StatefulWidget {
 }
 
 class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
+  bool _isLoading = false;
   File? _selectedImage;
   Uint8List? _imageBytes;
   bool _isDragOver = false;
@@ -25,16 +29,13 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
   // Simulated file picker (replace with actual image_picker implementation)
   Future<void> _pickImage() async {
     try {
-      // In a real app, you would use:
-      // final ImagePicker picker = ImagePicker();
-      // final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-
       // For demonstration, we'll simulate file selection
       _showImagePicker();
     } catch (e) {
       _showError('Error picking image: $e');
     }
   }
+
   void _openWhatsAppDpPicker() {
     showModalBottomSheet(
       context: context,
@@ -50,6 +51,19 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
         },
       ),
     );
+  }
+
+  void _openWhatsAppCameraPicker() async {
+    final File? image = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const WhatsAppCameraPage()),
+    );
+
+    if (image != null) {
+      setState(() {
+        _selectedImage = image;
+      });
+    }
   }
 
   void _showImagePicker() {
@@ -90,7 +104,7 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                   label: 'Camera',
                   onTap: () {
                     Navigator.pop(context);
-                    _simulateImageSelection('camera');
+                    _openWhatsAppCameraPicker();
                   },
                 ),
                 _buildOptionButton(
@@ -138,24 +152,6 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
     );
   }
 
-  void _simulateImageSelection(String source) {
-    // Simulate image selection
-    setState(() {
-      _selectedImage = File(
-        'simulated_path.jpg',
-      ); // This would be the actual file
-      // In a real implementation, you would load the actual image bytes
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Image selected from $source'),
-        backgroundColor: const Color(0xFF25D366),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
-
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -166,17 +162,31 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
     );
   }
 
-  void _setProfilePicture() {
+  void _setProfilePicture() async {
     if (_selectedImage != null) {
-      // Handle setting profile picture logic here
-      //call service here
-      print('Setting profile picture: ${_selectedImage!.path}');
-      _showSuccessDialog();
+      setState(() {
+        _isLoading = true;
+      });
+      final msg = await DpUploadService().UploadDp(
+        widget.email!,
+        _selectedImage!,
+      );
+      if (msg == 'Profile Photo Uploaded') {
+        _showSuccessDialog();
+      } else {
+        Fluttertoast.showToast(
+          msg: msg,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.TOP,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
     } else {
       _showError('Please select an image first');
     }
   }
-
 
   void _showSuccessDialog() {
     showDialog(
@@ -349,7 +359,9 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: _selectedImage != null ? _setProfilePicture : null,
+                  onPressed: _selectedImage != null && !_isLoading
+                      ? _setProfilePicture
+                      : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _selectedImage != null
                         ? const Color(0xFF25D366)
@@ -360,10 +372,24 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                     ),
                     elevation: 0,
                   ),
-                  child: const Text(
-                    'Set as Profile Picture',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
+                          ),
+                        )
+                      : const Text(
+                          'Set as Profile Picture',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                 ),
               ),
 
