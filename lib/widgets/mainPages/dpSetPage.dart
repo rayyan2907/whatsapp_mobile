@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
 import 'dart:typed_data';
-
+import 'package:image_picker/image_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:whatsapp_mobile/color.dart';
-
+import 'login.dart';
 
 class ProfilePictureScreen extends StatefulWidget {
   final String? email;
-  const ProfilePictureScreen({super.key,required this.email});
+  const ProfilePictureScreen({super.key, required this.email});
 
   @override
   State<ProfilePictureScreen> createState() => _ProfilePictureScreenState();
@@ -108,19 +108,12 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
               color: Color(0xFF25D366),
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              icon,
-              color: Colors.white,
-              size: 28,
-            ),
+            child: Icon(icon, color: Colors.white, size: 28),
           ),
           const SizedBox(height: 8),
           Text(
             label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-            ),
+            style: const TextStyle(color: Colors.white, fontSize: 14),
           ),
         ],
       ),
@@ -130,7 +123,9 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
   void _simulateImageSelection(String source) {
     // Simulate image selection
     setState(() {
-      _selectedImage = File('simulated_path.jpg'); // This would be the actual file
+      _selectedImage = File(
+        'simulated_path.jpg',
+      ); // This would be the actual file
       // In a real implementation, you would load the actual image bytes
     });
 
@@ -156,12 +151,14 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
   void _setProfilePicture() {
     if (_selectedImage != null) {
       // Handle setting profile picture logic here
+      //call service here
       print('Setting profile picture: ${_selectedImage!.path}');
       _showSuccessDialog();
     } else {
       _showError('Please select an image first');
     }
   }
+
 
   void _showSuccessDialog() {
     showDialog(
@@ -193,8 +190,18 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
   }
 
   void _navigateToNextScreen() {
-    // Navigate to main app or next onboarding screen
-    print('Navigating to main app...');
+    Navigator.pushAndRemoveUntil(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const LoginScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+        transitionDuration: const Duration(milliseconds: 100),
+      ),
+      (route) => false,
+    );
   }
 
   void _skipForNow() {
@@ -269,10 +276,7 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
               // Subtitle
               const Text(
                 'Choose a photo that represents you - it will be displayed as a circle',
-                style: TextStyle(
-                  color: Color(0xFF8696A0),
-                  fontSize: 16,
-                ),
+                style: TextStyle(color: Color(0xFF8696A0), fontSize: 16),
                 textAlign: TextAlign.center,
               ),
 
@@ -281,10 +285,7 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
               // Success Message
               const Text(
                 'Account created. Set profile photo',
-                style: TextStyle(
-                  color: Color(0xFF25D366),
-                  fontSize: 14,
-                ),
+                style: TextStyle(color: Color(0xFF25D366), fontSize: 14),
                 textAlign: TextAlign.center,
               ),
 
@@ -297,10 +298,14 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                   width: double.infinity,
                   height: 200,
                   decoration: BoxDecoration(
-                    color: _isDragOver ? const Color(0xFFF5F5F5) : const Color(0xFFE8E8E8),
+                    color: _isDragOver
+                        ? const Color(0xFFF5F5F5)
+                        : const Color(0xFFE8E8E8),
                     borderRadius: BorderRadius.circular(25),
                     border: Border.all(
-                      color: _isDragOver ? const Color(0xFF25D366) : Colors.transparent,
+                      color: _isDragOver
+                          ? const Color(0xFF25D366)
+                          : Colors.transparent,
                       width: 2,
                     ),
                   ),
@@ -315,10 +320,7 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
               // Supported formats text
               const Text(
                 'Supported formats: JPG, PNG, GIF. Maximum size: 5MB',
-                style: TextStyle(
-                  color: Color(0xFF8696A0),
-                  fontSize: 12,
-                ),
+                style: TextStyle(color: Color(0xFF8696A0), fontSize: 12),
                 textAlign: TextAlign.center,
               ),
 
@@ -342,10 +344,7 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                   ),
                   child: const Text(
                     'Set as Profile Picture',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                 ),
               ),
@@ -359,10 +358,7 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                 child: OutlinedButton(
                   onPressed: _skipForNow,
                   style: OutlinedButton.styleFrom(
-                    side: const BorderSide(
-                      color: Color(0xFF2A3942),
-                      width: 1,
-                    ),
+                    side: const BorderSide(color: Color(0xFF2A3942), width: 1),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
                     ),
@@ -397,11 +393,7 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
             color: Colors.grey.shade400,
             shape: BoxShape.circle,
           ),
-          child: Icon(
-            Icons.add_a_photo,
-            color: Colors.grey.shade600,
-            size: 30,
-          ),
+          child: Icon(Icons.add_a_photo, color: Colors.grey.shade600, size: 30),
         ),
         const SizedBox(height: 16),
         Text(
@@ -418,10 +410,7 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
           children: [
             Text(
               'or ',
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 14,
-              ),
+              style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
             ),
             GestureDetector(
               onTap: _pickImage,
@@ -457,11 +446,7 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
               color: Color(0xFF25D366),
               shape: BoxShape.circle,
             ),
-            child: const Icon(
-              Icons.check,
-              color: Colors.white,
-              size: 40,
-            ),
+            child: const Icon(Icons.check, color: Colors.white, size: 40),
           ),
           const SizedBox(height: 16),
           Text(
@@ -475,14 +460,10 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
           const SizedBox(height: 8),
           Text(
             'Tap to change',
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 12,
-            ),
+            style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
           ),
         ],
       ),
     );
   }
 }
-
