@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:whatsapp_mobile/services/getUser.dart';
-import 'package:whatsapp_mobile/services/logOutService.dart';
+import 'package:whatsapp_mobile/services/RegAndLogin/logOutService.dart';
 import 'package:whatsapp_mobile/widgets/mainPages/login.dart';
 
 import '../players/imageViewer.dart';

@@ -6,7 +6,7 @@ import 'package:whatsapp_mobile/responsive/responsive_layout.dart';
 import 'package:whatsapp_mobile/screens/mobile_screen_layout.dart';
 import 'package:whatsapp_mobile/screens/web_screen_layout.dart';
 import 'package:whatsapp_mobile/widgets/mainPages/login.dart';
-import 'services/jwtExpire.dart';
+import 'services/RegAndLogin/jwtExpire.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

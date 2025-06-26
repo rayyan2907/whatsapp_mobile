@@ -5,7 +5,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:whatsapp_mobile/color.dart';
-import 'package:whatsapp_mobile/services/dpSetService.dart';
+import 'package:whatsapp_mobile/services/RegAndLogin/dpSetService.dart';
 import 'package:whatsapp_mobile/widgets/Selectors/cameraSelector.dart';
 import '../Selectors/dpSelector.dart';
 import 'login.dart';

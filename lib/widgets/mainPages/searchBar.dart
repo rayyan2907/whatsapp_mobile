@@ -7,8 +7,8 @@ import 'package:whatsapp_mobile/color.dart';
 
 import '../../screens/mobile_chat_screen.dart';
 import '../../services/getUser.dart';
-import '../../services/logOutService.dart';
-import '../../services/searchService.dart';
+import '../../services/RegAndLogin/logOutService.dart';
+import '../../services/searchBar/searchService.dart';
 
 class WhatsAppSearchBar extends StatefulWidget {
   const WhatsAppSearchBar({super.key});

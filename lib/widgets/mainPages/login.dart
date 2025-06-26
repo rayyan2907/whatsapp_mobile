@@ -3,7 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:whatsapp_mobile/screens/mobile_screen_layout.dart';
-import 'package:whatsapp_mobile/services/login.dart';
+import 'package:whatsapp_mobile/services/RegAndLogin/login.dart';
 import 'signUp.dart';
 
 

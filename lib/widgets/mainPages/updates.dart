@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:whatsapp_mobile/color.dart';
 
 import '../../services/getUser.dart';
-import '../../services/logOutService.dart';
+import '../../services/RegAndLogin/logOutService.dart';
 import '../players/imageViewer.dart';
 
 class UpdatesPage extends StatefulWidget {

@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
 
 import 'package:whatsapp_mobile/color.dart';
-import 'package:whatsapp_mobile/services/otpService.dart';
+import 'package:whatsapp_mobile/services/RegAndLogin/otpService.dart';
 import 'package:whatsapp_mobile/widgets/mainPages/dpSetPage.dart';
 
 import 'login.dart';
