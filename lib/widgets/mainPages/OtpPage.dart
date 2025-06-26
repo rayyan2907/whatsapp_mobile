@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
 
 import 'package:whatsapp_mobile/color.dart';
 import 'package:whatsapp_mobile/services/otpService.dart';
+import 'package:whatsapp_mobile/widgets/mainPages/dpSetPage.dart';
 
 import 'login.dart';
 
@@ -121,8 +123,32 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
               actions: [
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
-                    // Navigate to main app
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder:
+                            (context, animation, secondaryAnimation) =>
+                            ProfilePictureScreen(email: widget.email,),
+                        transitionsBuilder:
+                            (
+                            context,
+                            animation,
+                            secondaryAnimation,
+                            child,
+                            ) {
+                          return FadeTransition(
+                            opacity: animation,
+                            child: child,
+                          );
+                        },
+                        transitionDuration: const Duration(
+                          milliseconds: 100,
+                        ),
+                      ),
+                          (route) => false,
+                    );
+
+
                   },
                   child: const Text(
                     'Continue',
@@ -199,18 +225,10 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                         const Spacer(flex: 2),
 
                         // Logo
-                        Container(
-                          width: 80,
-                          height: 80,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF25D366),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.chat,
-                            color: Colors.white,
-                            size: 40,
-                          ),
+                        const FaIcon(
+                          FontAwesomeIcons.whatsapp,
+                          color: Color(0xFF25D366),
+                          size: 70,
                         ),
 
                         const SizedBox(height: 32),

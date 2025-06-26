@@ -1,0 +1,488 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:whatsapp_mobile/color.dart';
+
+
+class ProfilePictureScreen extends StatefulWidget {
+  final String? email;
+  const ProfilePictureScreen({super.key,required this.email});
+
+  @override
+  State<ProfilePictureScreen> createState() => _ProfilePictureScreenState();
+}
+
+class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
+  File? _selectedImage;
+  Uint8List? _imageBytes;
+  bool _isDragOver = false;
+
+  // Simulated file picker (replace with actual image_picker implementation)
+  Future<void> _pickImage() async {
+    try {
+      // In a real app, you would use:
+      // final ImagePicker picker = ImagePicker();
+      // final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+      // For demonstration, we'll simulate file selection
+      _showImagePicker();
+    } catch (e) {
+      _showError('Error picking image: $e');
+    }
+  }
+
+  void _showImagePicker() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF1F2C34),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+      ),
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: const Color(0xFF8696A0),
+                borderRadius: BorderRadius.circular(25),
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Select Profile Picture',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildOptionButton(
+                  icon: Icons.camera_alt,
+                  label: 'Camera',
+                  onTap: () {
+                    Navigator.pop(context);
+                    _simulateImageSelection('camera');
+                  },
+                ),
+                _buildOptionButton(
+                  icon: Icons.photo_library,
+                  label: 'Gallery',
+                  onTap: () {
+                    Navigator.pop(context);
+                    _simulateImageSelection('gallery');
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOptionButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            width: 60,
+            height: 60,
+            decoration: const BoxDecoration(
+              color: Color(0xFF25D366),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              color: Colors.white,
+              size: 28,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _simulateImageSelection(String source) {
+    // Simulate image selection
+    setState(() {
+      _selectedImage = File('simulated_path.jpg'); // This would be the actual file
+      // In a real implementation, you would load the actual image bytes
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Image selected from $source'),
+        backgroundColor: const Color(0xFF25D366),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  void _setProfilePicture() {
+    if (_selectedImage != null) {
+      // Handle setting profile picture logic here
+      print('Setting profile picture: ${_selectedImage!.path}');
+      _showSuccessDialog();
+    } else {
+      _showError('Please select an image first');
+    }
+  }
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF1F2C34),
+        title: const Text(
+          'Profile Picture Set',
+          style: TextStyle(color: Colors.white),
+        ),
+        content: const Text(
+          'Your profile picture has been updated successfully!',
+          style: TextStyle(color: Color(0xFF8696A0)),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _navigateToNextScreen();
+            },
+            child: const Text(
+              'Continue',
+              style: TextStyle(color: Color(0xFF25D366)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _navigateToNextScreen() {
+    // Navigate to main app or next onboarding screen
+    print('Navigating to main app...');
+  }
+
+  void _skipForNow() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF1F2C34),
+        title: const Text(
+          'Skip Profile Picture?',
+          style: TextStyle(color: Colors.white),
+        ),
+        content: const Text(
+          'You can always add a profile picture later from settings.',
+          style: TextStyle(color: Color(0xFF8696A0)),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Color(0xFF8696A0)),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _navigateToNextScreen();
+            },
+            child: const Text(
+              'Skip',
+              style: TextStyle(color: Color(0xFF25D366)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: backgroundColor,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Spacer(flex: 2),
+
+              // WhatsApp Logo
+              const FaIcon(
+                FontAwesomeIcons.whatsapp,
+                color: Color(0xFF25D366),
+                size: 70,
+              ),
+
+              const SizedBox(height: 32),
+
+              // Title
+              const Text(
+                'Set Profile Picture',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 28,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              // Subtitle
+              const Text(
+                'Choose a photo that represents you - it will be displayed as a circle',
+                style: TextStyle(
+                  color: Color(0xFF8696A0),
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.center,
+              ),
+
+              const SizedBox(height: 24),
+
+              // Success Message
+              const Text(
+                'Account created. Set profile photo',
+                style: TextStyle(
+                  color: Color(0xFF25D366),
+                  fontSize: 14,
+                ),
+                textAlign: TextAlign.center,
+              ),
+
+              const SizedBox(height: 40),
+
+              // Drag and Drop Area
+              GestureDetector(
+                onTap: _pickImage,
+                child: Container(
+                  width: double.infinity,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: _isDragOver ? const Color(0xFFF5F5F5) : const Color(0xFFE8E8E8),
+                    borderRadius: BorderRadius.circular(25),
+                    border: Border.all(
+                      color: _isDragOver ? const Color(0xFF25D366) : Colors.transparent,
+                      width: 2,
+                    ),
+                  ),
+                  child: _selectedImage != null
+                      ? _buildSelectedImage()
+                      : _buildDropZone(),
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              // Supported formats text
+              const Text(
+                'Supported formats: JPG, PNG, GIF. Maximum size: 5MB',
+                style: TextStyle(
+                  color: Color(0xFF8696A0),
+                  fontSize: 12,
+                ),
+                textAlign: TextAlign.center,
+              ),
+
+              const SizedBox(height: 40),
+
+              // Set Profile Picture Button
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: _selectedImage != null ? _setProfilePicture : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _selectedImage != null
+                        ? const Color(0xFF25D366)
+                        : const Color(0xFF25D366).withOpacity(0.5),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: const Text(
+                    'Set as Profile Picture',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              // Skip Button
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: OutlinedButton(
+                  onPressed: _skipForNow,
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(
+                      color: Color(0xFF2A3942),
+                      width: 1,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                  ),
+                  child: const Text(
+                    'Skip for now',
+                    style: TextStyle(
+                      color: Color(0xFF8696A0),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+
+              const Spacer(flex: 3),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDropZone() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 60,
+          height: 60,
+          decoration: BoxDecoration(
+            color: Colors.grey.shade400,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            Icons.add_a_photo,
+            color: Colors.grey.shade600,
+            size: 30,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          'Drag and drop your photo here',
+          style: TextStyle(
+            color: Colors.grey.shade700,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'or ',
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 14,
+              ),
+            ),
+            GestureDetector(
+              onTap: _pickImage,
+              child: const Text(
+                'browse files',
+                style: TextStyle(
+                  color: Color(0xFF25D366),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSelectedImage() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25),
+        color: Colors.grey.shade200,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 80,
+            height: 80,
+            decoration: const BoxDecoration(
+              color: Color(0xFF25D366),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.check,
+              color: Colors.white,
+              size: 40,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Image Selected',
+            style: TextStyle(
+              color: Colors.grey.shade700,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Tap to change',
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
