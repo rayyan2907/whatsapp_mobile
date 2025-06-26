@@ -171,8 +171,12 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
         widget.email!,
         _selectedImage!,
       );
-      if (msg == 'Profile Photo Uploaded') {
+      if (msg == 'success') {
+
         _showSuccessDialog();
+        setState(() {
+          _isLoading=false;
+        });
       } else {
         Fluttertoast.showToast(
           msg: msg,
