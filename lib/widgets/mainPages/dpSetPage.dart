@@ -3,13 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:image_picker/image_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:whatsapp_mobile/services/dpSetService.dart';
 import 'package:whatsapp_mobile/widgets/Selectors/cameraSelector.dart';
 import '../Selectors/dpSelector.dart';
-import '../Selectors/imageSelector.dart';
 import 'login.dart';
 
 class ProfilePictureScreen extends StatefulWidget {

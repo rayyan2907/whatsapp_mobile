@@ -26,30 +26,30 @@ class MobileChatScreen extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: () {
-                if (user['profile_pic'] != null &&
-                    user['profile_pic'].toString().isNotEmpty) {
+                if (user['profile_pic_url'] != null &&
+                    user['profile_pic_url'].toString().isNotEmpty) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (_) => ImageViewer(
-                        imageUrl: user['profile_pic'].toString(),
+                        imageUrl: user['profile_pic_url'].toString(),
                       ),
                     ),
                   );
                 }
               },
               child: Hero(
-                tag: user['profile_pic'] ?? 'default_dp',
+                tag: user['profile_pic_url'] ?? 'default_dp',
                 child: CircleAvatar(
                   radius: 17.5,
                   backgroundImage:
-                  user['profile_pic'] != null &&
-                      user['profile_pic'].toString().isNotEmpty
-                      ? NetworkImage(user['profile_pic'].toString())
+                  user['profile_pic_url'] != null &&
+                      user['profile_pic_url'].toString().isNotEmpty
+                      ? NetworkImage(user['profile_pic_url'].toString())
                       : null,
                   backgroundColor: Colors.grey,
-                  child: user['profile_pic'] == null ||
-                      user['profile_pic'].toString().isEmpty
+                  child: user['profile_pic_url'] == null ||
+                      user['profile_pic_url'].toString().isEmpty
                       ? const Icon(Icons.person, color: Colors.white)
                       : null,
                 ),
@@ -62,7 +62,8 @@ class MobileChatScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    user['name'],
+                    "${user['first_name'] ?? ''} ${user['last_name'] ?? ''}".trim(),
+
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
