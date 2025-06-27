@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:whatsapp_mobile/services/getUser.dart';
 import 'package:whatsapp_mobile/services/RegAndLogin/logOutService.dart';
+import 'package:whatsapp_mobile/widgets/mainPages/dpUpdatePage.dart';
 import 'package:whatsapp_mobile/widgets/mainPages/login.dart';
 
 import '../players/imageViewer.dart';
@@ -28,13 +29,15 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> loadData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final localPic = prefs.getString('profile_pic_url');
     final user = await GetUser.getLoggedInUser();
     print(user);
     if (user != null) {
       setState(() {
         fullName = "${user['first_name']} ${user['last_name']}";
 
-        pic_url = user['profile_pic_url'];
+        pic_url = localPic??user['profile_pic_url'];
       });
     } else {
       await LogoutService.logout(context);
@@ -131,7 +134,15 @@ class _SettingsPageState extends State<SettingsPage> {
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
                 onTap: () {
-                  // Add logic to open image picker
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) => DpUpdatePage(),
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero,
+                    ),
+                  );
+
                 },
               ),
             ),

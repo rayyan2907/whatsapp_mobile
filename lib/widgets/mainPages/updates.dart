@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp_mobile/color.dart';
 
 import '../../services/getUser.dart';
@@ -24,11 +25,13 @@ class _UpdatesPageState extends State<UpdatesPage> {
   }
 
   Future<void> loadData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final localPic = prefs.getString('profile_pic_url');
     final user = await GetUser.getLoggedInUser();
     print(user);
     if (user != null) {
       setState(() {
-        pic_url = user['profile_pic_url'];
+        pic_url = localPic??user['profile_pic_url'];
       });
     } else {
       await LogoutService.logout(context);
