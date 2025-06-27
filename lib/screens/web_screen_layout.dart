@@ -8,6 +8,8 @@ import 'package:whatsapp_mobile/widgets/webPages/web_profie_bar.dart';
 import 'package:whatsapp_mobile/widgets/webPages/web_chatapp_bar.dart';
 
 class WebScreenLayout extends StatelessWidget {
+
+
   const WebScreenLayout({super.key});
 
   @override
@@ -33,12 +35,12 @@ class WebScreenLayout extends StatelessWidget {
           Expanded(
             child: Container(
               color: backgroundColor,
-              child: const Center(
+              child: Center(
                 child: Column(
                   children: [
-                    WebChatappBar(),
-                    Expanded(child: Chatlist()),
-                    SendMessageBar(),
+                    const WebChatappBar(),
+                   // Expanded(child: Chatlist(user: user,)),
+                    const SendMessageBar(),
                   ],
                 ),
               ),

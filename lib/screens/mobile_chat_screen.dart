@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:whatsapp_mobile/controller/selectedUser.dart';
 import 'package:whatsapp_mobile/widgets/messagesSection/chatList.dart';
 import 'package:whatsapp_mobile/widgets/messagesSection/messageBar.dart';
 
@@ -88,13 +89,13 @@ class MobileChatScreen extends StatelessWidget {
         ],
       ),
       body: Column(
-        children: const [
+        children: [
           Expanded(
             child: Center(
-              child: Chatlist(),
+              child: Chatlist(user: user,),
             ),
           ),
-          MessageBar(),
+          const MessageBar(),
         ],
       ),
     );
