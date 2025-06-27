@@ -100,7 +100,7 @@ class _WhatsAppSearchBarState extends State<WhatsAppSearchBar> {
           const Padding(
             padding: EdgeInsets.all(8.0),
             child: CircularProgressIndicator(
-              color: Colors.greenAccent,
+              color: Colors.green,
               strokeWidth: 2,
             ),
           ),

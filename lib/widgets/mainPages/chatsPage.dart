@@ -1,15 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp_mobile/screens/mobile_chat_screen.dart';
 import 'package:whatsapp_mobile/services/contacts.dart';
 import 'package:whatsapp_mobile/widgets/mainPages/searchBar.dart';
 
 import '../players/imageViewer.dart';
 
-class Contactlist extends StatelessWidget {
+class Contactlist extends StatefulWidget {
   const Contactlist({super.key});
 
   @override
+  State<Contactlist> createState() => _ContactlistState();
+}
+
+
+class _ContactlistState extends State<Contactlist> {
+  bool _isLoading = false;
+  List contacts = [];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadContacts();
+  }
+  void loadContacts()async{
+    setState(() {
+      _isLoading=true;
+    });
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('jwt');
+
+      final result = await GetContacts().loadContacts(token);
+    if (!mounted) return;
+      setState(() {
+        _isLoading=false;
+        contacts=result;
+      });
+  }
+  @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(color: Colors.green),
+      );
+    }
+
     return ListView.builder(
       physics: const BouncingScrollPhysics(),
       itemCount: contacts.length + 2, // +2 for title and search bar
@@ -33,6 +68,14 @@ class Contactlist extends StatelessWidget {
           );
         }
 
+        if (contacts.isEmpty) {
+          return const Center(
+            child: Text(
+              "No contacts found",
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          );
+        }
         final contact = contacts[index - 2];
         return InkWell(
           onTap: () {
@@ -44,11 +87,11 @@ class Contactlist extends StatelessWidget {
           },
           child: ListTile(
             title: Text(
-              contact['name'].toString(),
+                contact['first_name'].toString()+" "+contact['last_name'].toString(),
               style: const TextStyle(
-                fontSize: 15,
+                fontSize: 16,
                 color: Colors.white,
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w500,
               ),
             ),
             subtitle: Padding(
@@ -64,27 +107,27 @@ class Contactlist extends StatelessWidget {
             ),
             leading: GestureDetector(
               onTap: () {
-                if (contact['profile_pic'] != null &&
-                    contact['profile_pic'].toString().isNotEmpty) {
+                if (contact['profile_pic_url'] != null &&
+                    contact['profile_pic_url'].toString().isNotEmpty) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (_) => ImageViewer(
-                        imageUrl: contact['profile_pic'].toString(),
+                        imageUrl: contact['profile_pic_url'].toString(),
                       ),
                     ),
                   );
                 }
               },
               child: Hero(
-                tag: contact['profile_pic'] ?? 'default_dp_${index - 2}',
+                tag: contact['profile_pic_url'] ?? 'default_dp_${index - 2}',
                 child:
-                    contact['profile_pic'] != null &&
-                        contact['profile_pic'].toString().isNotEmpty
+                    contact['profile_pic_url'] != null &&
+                        contact['profile_pic_url'].toString().isNotEmpty
                     ? CircleAvatar(
                         radius: 22.5,
                         backgroundImage: NetworkImage(
-                          contact['profile_pic'].toString(),
+                          contact['profile_pic_url'].toString(),
                         ),
                       )
                     : const CircleAvatar(
@@ -99,7 +142,7 @@ class Contactlist extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  contact['time'].toString(),
+                  contact['last_msg_time'].toString(),
                   style: const TextStyle(fontSize: 10, color: Colors.green),
                 ),
                 const SizedBox(height: 10),

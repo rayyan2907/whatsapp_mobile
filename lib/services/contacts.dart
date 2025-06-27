@@ -1,122 +1,171 @@
-const contacts = [
-  {
-    'name': 'Rayyan',
-    'message': 'Hey, what’s up?',
-    'time': '03:45 pm',
-    'profile_pic': 'https://whatsap.blob.core.windows.net/profilepics/713d99e3-a249-4633-bf61-d2df4e55dd39.jpg',
-  },
-  {
-    'name': 'Ali Khan',
-    'message': 'Meeting postponed to 5PM.',
-    'time': '02:10 pm',
-    'profile_pic': '',
-  },
-  {
-    'name': 'Zoya Fatima',
-    'message': 'Call me when you’re free.',
-    'time': '01:22 pm',
-    'profile_pic': 'https://randomuser.me/api/portraits/women/13.jpg',
-  },
-  {
-    'name': 'Class Group',
-    'message': 'Assignment deadline extended!',
-    'time': '12:01 pm',
-    'profile_pic': null,
-  },
-  {
-    'name': 'Ammi',
-    'message': 'Beta, khana khaya?',
-    'time': '11:18 am',
-    'profile_pic': 'https://randomuser.me/api/portraits/women/14.jpg',
-  },
-  {
-    'name': 'Ahmed Dev',
-    'message': 'Flutter project done!',
-    'time': 'Yesterday',
-    'profile_pic': 'https://randomuser.me/api/portraits/men/15.jpg',
-  },
-  {
-    'name': 'Farah',
-    'message': 'Shopping chalo?',
-    'time': '10:02 am',
-    'profile_pic': 'https://randomuser.me/api/portraits/women/16.jpg',
-  },
-  {
-    'name': 'Hamza',
-    'message': 'Cricket match today!',
-    'time': '09:00 am',
-    'profile_pic': 'https://randomuser.me/api/portraits/men/17.jpg',
-  },
-  {
-    'name': 'UET Friends',
-    'message': 'Let’s meet at the cafe.',
-    'time': '08:30 am',
-    'profile_pic': 'https://img.icons8.com/color/96/000000/groups.png',
-  },
-  {
-    'name': 'Sir Bilal',
-    'message': 'Assignment marked.',
-    'time': '07:15 am',
-    'profile_pic': 'https://randomuser.me/api/portraits/men/18.jpg',
-  },
-  {
-    'name': 'Nimra',
-    'message': 'Send me the notes.',
-    'time': 'Yesterday',
-    'profile_pic': 'https://randomuser.me/api/portraits/women/19.jpg',
-  },
-  {
-    'name': 'Faizan',
-    'message': 'PUBG tonight?',
-    'time': 'Yesterday',
-    'profile_pic': 'https://randomuser.me/api/portraits/men/20.jpg',
-  },
-  {
-    'name': 'Mama',
-    'message': 'Check your email.',
-    'time': 'Tuesday',
-    'profile_pic': 'https://randomuser.me/api/portraits/women/21.jpg',
-  },
-  {
-    'name': 'Asif Bhai',
-    'message': 'Payment done.',
-    'time': 'Monday',
-    'profile_pic': 'https://randomuser.me/api/portraits/men/22.jpg',
-  },
-  {
-    'name': 'Fatima Zahra',
-    'message': 'Let’s catch up soon!',
-    'time': 'Monday',
-    'profile_pic': 'https://randomuser.me/api/portraits/women/23.jpg',
-  },
-  {
-    'name': 'Tayyab',
-    'message': 'New laptop 👀',
-    'time': 'Sunday',
-    'profile_pic': 'https://randomuser.me/api/portraits/men/24.jpg',
-  },
-  {
-    'name': 'Dua',
-    'message': 'PDF mil gaya?',
-    'time': 'Sunday',
-    'profile_pic': 'https://randomuser.me/api/portraits/women/25.jpg',
-  },
-  {
-    'name': 'Hassan',
-    'message': 'Kya scene kal?',
-    'time': 'Saturday',
-    'profile_pic': 'https://randomuser.me/api/portraits/men/26.jpg',
-  },
-  {
-    'name': 'Nadia',
-    'message': 'Bhai ki shaadi kab hai?',
-    'time': 'Friday',
-    'profile_pic': 'https://randomuser.me/api/portraits/women/27.jpg',
-  },
-  {
-    'name': 'Waleed',
-    'message': 'File sent ✔️',
-    'time': 'Thursday',
-    'profile_pic': 'https://randomuser.me/api/portraits/men/28.jpg',
-  },
-];
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+class GetContacts{
+  final String _baseUrl = "http://192.168.0.109:5246";
+  Future<List<dynamic>> loadContacts(final token)async{
+    final url = Uri.parse('$_baseUrl/getContacts');
+
+    final response= await http.get(
+      url,
+      headers: {
+        "Authorization":  "Bearer $token",
+        "Content-Type": "application/json",
+      },
+
+    );
+    if(response.statusCode==200){
+      final List<dynamic> result = json.decode(response.body);
+      return result;
+
+    }
+    else{
+      throw Exception("failed to get contacts");
+    }
+
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
+//
+// const contacts = [
+//   {
+//     'name': 'Rayyan',
+//     'message': 'Hey, what’s up?',
+//     'time': '03:45 pm',
+//     'profile_pic': 'https://whatsap.blob.core.windows.net/profilepics/713d99e3-a249-4633-bf61-d2df4e55dd39.jpg',
+//   },
+//   {
+//     'name': 'Ali Khan',
+//     'message': 'Meeting postponed to 5PM.',
+//     'time': '02:10 pm',
+//     'profile_pic': '',
+//   },
+//   {
+//     'name': 'Zoya Fatima',
+//     'message': 'Call me when you’re free.',
+//     'time': '01:22 pm',
+//     'profile_pic': 'https://randomuser.me/api/portraits/women/13.jpg',
+//   },
+//   {
+//     'name': 'Class Group',
+//     'message': 'Assignment deadline extended!',
+//     'time': '12:01 pm',
+//     'profile_pic': null,
+//   },
+//   {
+//     'name': 'Ammi',
+//     'message': 'Beta, khana khaya?',
+//     'time': '11:18 am',
+//     'profile_pic': 'https://randomuser.me/api/portraits/women/14.jpg',
+//   },
+//   {
+//     'name': 'Ahmed Dev',
+//     'message': 'Flutter project done!',
+//     'time': 'Yesterday',
+//     'profile_pic': 'https://randomuser.me/api/portraits/men/15.jpg',
+//   },
+//   {
+//     'name': 'Farah',
+//     'message': 'Shopping chalo?',
+//     'time': '10:02 am',
+//     'profile_pic': 'https://randomuser.me/api/portraits/women/16.jpg',
+//   },
+//   {
+//     'name': 'Hamza',
+//     'message': 'Cricket match today!',
+//     'time': '09:00 am',
+//     'profile_pic': 'https://randomuser.me/api/portraits/men/17.jpg',
+//   },
+//   {
+//     'name': 'UET Friends',
+//     'message': 'Let’s meet at the cafe.',
+//     'time': '08:30 am',
+//     'profile_pic': 'https://img.icons8.com/color/96/000000/groups.png',
+//   },
+//   {
+//     'name': 'Sir Bilal',
+//     'message': 'Assignment marked.',
+//     'time': '07:15 am',
+//     'profile_pic': 'https://randomuser.me/api/portraits/men/18.jpg',
+//   },
+//   {
+//     'name': 'Nimra',
+//     'message': 'Send me the notes.',
+//     'time': 'Yesterday',
+//     'profile_pic': 'https://randomuser.me/api/portraits/women/19.jpg',
+//   },
+//   {
+//     'name': 'Faizan',
+//     'message': 'PUBG tonight?',
+//     'time': 'Yesterday',
+//     'profile_pic': 'https://randomuser.me/api/portraits/men/20.jpg',
+//   },
+//   {
+//     'name': 'Mama',
+//     'message': 'Check your email.',
+//     'time': 'Tuesday',
+//     'profile_pic': 'https://randomuser.me/api/portraits/women/21.jpg',
+//   },
+//   {
+//     'name': 'Asif Bhai',
+//     'message': 'Payment done.',
+//     'time': 'Monday',
+//     'profile_pic': 'https://randomuser.me/api/portraits/men/22.jpg',
+//   },
+//   {
+//     'name': 'Fatima Zahra',
+//     'message': 'Let’s catch up soon!',
+//     'time': 'Monday',
+//     'profile_pic': 'https://randomuser.me/api/portraits/women/23.jpg',
+//   },
+//   {
+//     'name': 'Tayyab',
+//     'message': 'New laptop 👀',
+//     'time': 'Sunday',
+//     'profile_pic': 'https://randomuser.me/api/portraits/men/24.jpg',
+//   },
+//   {
+//     'name': 'Dua',
+//     'message': 'PDF mil gaya?',
+//     'time': 'Sunday',
+//     'profile_pic': 'https://randomuser.me/api/portraits/women/25.jpg',
+//   },
+//   {
+//     'name': 'Hassan',
+//     'message': 'Kya scene kal?',
+//     'time': 'Saturday',
+//     'profile_pic': 'https://randomuser.me/api/portraits/men/26.jpg',
+//   },
+//   {
+//     'name': 'Nadia',
+//     'message': 'Bhai ki shaadi kab hai?',
+//     'time': 'Friday',
+//     'profile_pic': 'https://randomuser.me/api/portraits/women/27.jpg',
+//   },
+//   {
+//     'name': 'Waleed',
+//     'message': 'File sent ✔️',
+//     'time': 'Thursday',
+//     'profile_pic': 'https://randomuser.me/api/portraits/men/28.jpg',
+//   },
+// ];
