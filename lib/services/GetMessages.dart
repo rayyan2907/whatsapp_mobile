@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class Getmessages{
-  final String _baseUrl = "http://192.168.0.109:5246";
+  final String _baseUrl = "https://whatsappclonebackend.azurewebsites.net";
   Future<List<dynamic>?> loadMessages(final token,final id,final offset)async{
     final url = Uri.parse('$_baseUrl/message/getMessage?id=$id&ofsset=$offset');
     print(url);

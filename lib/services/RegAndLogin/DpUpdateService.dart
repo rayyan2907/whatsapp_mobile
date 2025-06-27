@@ -10,7 +10,7 @@ import '../../widgets/mainPages/login.dart';
 
 class DpUpdateService {
   Future<String> UploadDp(File img, final token) async {
-    final String _baseUrl = "http://192.168.0.109:5246";
+    final String _baseUrl = "https://whatsappclonebackend.azurewebsites.net";
 
     try {
       print("token in uplaod dp is$token");

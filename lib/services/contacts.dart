@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class GetContacts{
-  final String _baseUrl = "http://192.168.0.109:5246";
+  final String _baseUrl = "https://whatsappclonebackend.azurewebsites.net";
   Future<List<dynamic>> loadContacts(final token)async{
     final url = Uri.parse('$_baseUrl/getContacts');
 
