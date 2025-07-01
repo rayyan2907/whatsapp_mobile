@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:whatsapp_mobile/services/getUser.dart';
@@ -173,13 +173,16 @@ class _SettingsPageState extends State<SettingsPage> {
 
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.clear();
-                  Fluttertoast.showToast(
-                    msg: "Logged out successfully",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.TOP,
-                    backgroundColor: Colors.green,
-                    textColor: Colors.white,
-                    fontSize: 16.0,
+                  showToast(
+                    "Logged out successfully",
+                    duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
+                    position: ToastPosition.top,
+                    backgroundColor: Colors.red,
+                    textStyle: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.0,
+                    ),
+                    radius: 8.0, // optional, for rounded edges
                   );
 
                   Navigator.pushAndRemoveUntil(

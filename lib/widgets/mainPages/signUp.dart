@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:whatsapp_mobile/services/RegAndLogin/RegistrationService.dart';
@@ -284,25 +284,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         email.isEmpty ||
                         password.isEmpty ||
                         birthDate.isEmpty) {
-                      Fluttertoast.showToast(
-                        msg: "All fields are required",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.TOP,
-                        backgroundColor: Colors.redAccent,
-                        textColor: Colors.white,
-                        fontSize: 16.0,
+                      showToast(
+                        "All feilds are required",
+                        duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
+                        position: ToastPosition.top,
+                        backgroundColor: Colors.red,
+                        textStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                        ),
+                        radius: 8.0, // optional, for rounded edges
                       );
                       return;
                     }
 
                     if (password.length < 8) {
-                      Fluttertoast.showToast(
-                        msg: "Password must be at least 8 characters",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.TOP,
-                        backgroundColor: Colors.redAccent,
-                        textColor: Colors.white,
-                        fontSize: 16.0,
+                      showToast(
+                        "Password must be atleast of 8 characters",
+                        duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
+                        position: ToastPosition.top,
+                        backgroundColor: Colors.red,
+                        textStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                        ),
+                        radius: 8.0, // optional, for rounded edges
                       );
                       return;
                     }
@@ -328,13 +334,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         isoBirthDate,
                       );
                       if (msg=="OTP sent to your email"){
-                        Fluttertoast.showToast(
-                          msg: msg,
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.TOP,
-                          backgroundColor: Colors.green,
-                          textColor: Colors.white,
-                          fontSize: 16.0,
+                        showToast(
+                          msg,
+                          duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
+                          position: ToastPosition.top,
+                          backgroundColor: Colors.red,
+                          textStyle: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                          ),
+                          radius: 8.0, // optional, for rounded edges
                         );
                         Navigator.pushAndRemoveUntil(
                           context,
@@ -362,26 +371,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         );
                       }
                       else {
-                        Fluttertoast.showToast(
-                          msg: msg,
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.TOP,
+                        showToast(
+                          msg,
+                          duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
+                          position: ToastPosition.top,
                           backgroundColor: Colors.red,
-                          textColor: Colors.white,
-                          fontSize: 16.0,
+                          textStyle: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                          ),
+                          radius: 8.0, // optional, for rounded edges
                         );
                       }
                       setState(() {
                         _isLoading = false;
                       });
                     } catch (e) {
-                      Fluttertoast.showToast(
-                        msg: "Invalid birthdate format",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.TOP,
-                        backgroundColor: Colors.redAccent,
-                        textColor: Colors.white,
-                        fontSize: 16.0,
+                      showToast(
+                        "invalid",
+                        duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
+                        position: ToastPosition.top,
+                        backgroundColor: Colors.red,
+                        textStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                        ),
+                        radius: 8.0, // optional, for rounded edges
                       );
                       return;
                     }

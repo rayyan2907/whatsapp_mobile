@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -24,13 +24,16 @@ class Getmessages{
     }
     else if(response.statusCode!=200){
       print("status is $response.statusCode");
-      Fluttertoast.showToast(
-        msg: "Failed to get messages",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.TOP,
-        backgroundColor: Colors.redAccent,
-        textColor: Colors.white,
-        fontSize: 16.0,
+      showToast(
+        "Failed to get messages",
+        duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
+        position: ToastPosition.top,
+        backgroundColor: Colors.red,
+        textStyle: TextStyle(
+          color: Colors.white,
+          fontSize: 16.0,
+        ),
+        radius: 8.0, // optional, for rounded edges
       );
       return null;
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:whatsapp_mobile/color.dart';
 
 class CommunitiesPage extends StatelessWidget {
@@ -80,13 +80,16 @@ class CommunitiesPage extends StatelessWidget {
               Center(
                 child: GestureDetector(
                   onTap: () {
-                    Fluttertoast.showToast(
-                      msg: "Comming Soon",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.TOP,
+                    showToast(
+                      "Comming soon",
+                      duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
+                      position: ToastPosition.top,
                       backgroundColor: Colors.red,
-                      textColor: Colors.white,
-                      fontSize: 16.0,
+                      textStyle: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0,
+                      ),
+                      radius: 8.0, // optional, for rounded edges
                     );
                   },
                   child: const Text(
@@ -111,13 +114,16 @@ class CommunitiesPage extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    Fluttertoast.showToast(
-                      msg: "Comming Soon",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.TOP,
+                    showToast(
+                      "Comming soon",
+                      duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
+                      position: ToastPosition.top,
                       backgroundColor: Colors.red,
-                      textColor: Colors.white,
-                      fontSize: 16.0,
+                      textStyle: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0,
+                      ),
+                      radius: 8.0, // optional, for rounded edges
                     );
                   },
                   icon: const Icon(Icons.add, color: Colors.white),

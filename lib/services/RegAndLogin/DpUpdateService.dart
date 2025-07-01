@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'dart:io';
+import 'package:oktoast/oktoast.dart';
 
 import '../../widgets/mainPages/login.dart';
 
@@ -34,13 +34,16 @@ class DpUpdateService {
 
         return 'success';
       } else if (response.statusCode == 401) {
-        Fluttertoast.showToast(
-          msg: "You have been Logged Out",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.TOP,
+        showToast(
+          "You have been Logged Out",
+          duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
+          position: ToastPosition.top,
           backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0,
+          textStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 16.0,
+          ),
+          radius: 8.0, // optional, for rounded edges
         );
         return 'Error in uploading';
       } else {

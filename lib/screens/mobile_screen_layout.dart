@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:whatsapp_mobile/widgets/mainPages/calls.dart';
 import 'package:whatsapp_mobile/widgets/mainPages/community.dart';
@@ -9,6 +8,7 @@ import 'package:whatsapp_mobile/widgets/mainPages/searchBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:whatsapp_mobile/widgets/mainPages/settings.dart';
 import 'package:whatsapp_mobile/widgets/mainPages/updates.dart';
+import 'package:oktoast/oktoast.dart';
 
 class MobileScreenLayout extends StatefulWidget {
   const MobileScreenLayout({super.key});
@@ -71,13 +71,16 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
                     const SizedBox(width: 10),
                     InkWell(
                       onTap: () {
-                        Fluttertoast.showToast(
-                          msg: "Comming Soon",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.TOP,
+                        showToast(
+                          "Coming Soon",
+                          duration: Duration(seconds: 2), // Equivalent to Toast.LENGTH_SHORT
+                          position: ToastPosition.top,
                           backgroundColor: Colors.red,
-                          textColor: Colors.white,
-                          fontSize: 16.0,
+                          textStyle: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                          ),
+                          radius: 8.0, // Optional: round corners like FlutterToast
                         );
                       },
                       child: Row(
@@ -113,13 +116,17 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
       floatingActionButton: _selectedIndex == 3
           ? FloatingActionButton(
               onPressed: () {
-                Fluttertoast.showToast(
-                  msg: "Comming Soon",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.TOP,
+
+                showToast(
+                  "Coming Soon",
+                  duration: Duration(seconds: 2), // Equivalent to Toast.LENGTH_SHORT
+                  position: ToastPosition.top,
                   backgroundColor: Colors.red,
-                  textColor: Colors.white,
-                  fontSize: 16.0,
+                  textStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                  ),
+                  radius: 8.0, // Optional: round corners like FlutterToast
                 );
               },
               backgroundColor: Colors.green,

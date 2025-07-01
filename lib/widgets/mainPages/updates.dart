@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp_mobile/color.dart';
 
@@ -136,13 +136,16 @@ class _UpdatesPageState extends State<UpdatesPage> {
                     size: 19,
                   ),
                   onPressed: () {
-                    Fluttertoast.showToast(
-                      msg: "Comming soon",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.TOP,
+                    showToast(
+                      "Comming soon",
+                      duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
+                      position: ToastPosition.top,
                       backgroundColor: Colors.red,
-                      textColor: Colors.white,
-                      fontSize: 16.0,
+                      textStyle: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0,
+                      ),
+                      radius: 8.0, // optional, for rounded edges
                     );
                   },
                 ),
@@ -153,13 +156,16 @@ class _UpdatesPageState extends State<UpdatesPage> {
                     size: 21,
                   ),
                   onPressed: () {
-                    Fluttertoast.showToast(
-                      msg: "Comming soon",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.TOP,
+                    showToast(
+                      "Comming soon",
+                      duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
+                      position: ToastPosition.top,
                       backgroundColor: Colors.red,
-                      textColor: Colors.white,
-                      fontSize: 16.0,
+                      textStyle: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0,
+                      ),
+                      radius: 8.0, // optional, for rounded edges
                     );
                   },
                 ),
@@ -223,13 +229,16 @@ class _UpdatesPageState extends State<UpdatesPage> {
                 ),
               ),
               onPressed: () {
-                Fluttertoast.showToast(
-                  msg: "Comming soon",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.TOP,
+                showToast(
+                  "Comming soon",
+                  duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
+                  position: ToastPosition.top,
                   backgroundColor: Colors.red,
-                  textColor: Colors.white,
-                  fontSize: 16.0,
+                  textStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                  ),
+                  radius: 8.0, // optional, for rounded edges
                 );
               },
               child: const Text(

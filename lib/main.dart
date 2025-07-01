@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:whatsapp_mobile/responsive/responsive_layout.dart';
@@ -27,13 +27,16 @@ class MyApp extends StatelessWidget {
             WebScreenLayout: WebScreenLayout(),
           );
         } else {
-          Fluttertoast.showToast(
-            msg: "Session Expired",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.TOP,
+          showToast(
+            "Session Expired",
+            duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
+            position: ToastPosition.top,
             backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0,
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 16.0,
+            ),
+            radius: 8.0, // optional, for rounded edges
           );
           return const LoginScreen();
         }

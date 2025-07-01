@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:whatsapp_mobile/screens/mobile_screen_layout.dart';
@@ -146,13 +146,16 @@ class _LoginScreenState extends State<LoginScreen> {
                               final email = _emailController.text.trim();
                               final password = _passwordController.text.trim();
                               if (email.isEmpty || password.isEmpty) {
-                                Fluttertoast.showToast(
-                                  msg: "All fields are required",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.TOP,
-                                  backgroundColor: Colors.redAccent,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0,
+                                showToast(
+                                  "All fields are required",
+                                  duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
+                                  position: ToastPosition.top,
+                                  backgroundColor: Colors.red,
+                                  textStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16.0,
+                                  ),
+                                  radius: 8.0, // optional, for rounded edges
                                 );
                               } else {
                                 setState(() {
@@ -166,13 +169,16 @@ class _LoginScreenState extends State<LoginScreen> {
                               });
 
                               if (msg == 'Login Successful') {
-                                Fluttertoast.showToast(
-                                  msg: msg,
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.TOP,
-                                  backgroundColor: Colors.green,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0,
+                                showToast(
+                                  msg,
+                                  duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
+                                  position: ToastPosition.top,
+                                  backgroundColor: Colors.red,
+                                  textStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16.0,
+                                  ),
+                                  radius: 8.0, // optional, for rounded edges
                                 );
                                 Navigator.pushReplacement(
                                   context,
@@ -181,13 +187,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 );
                               } else {
-                                Fluttertoast.showToast(
-                                  msg: msg,
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.TOP,
+                                showToast(
+                                  msg,
+                                  duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
+                                  position: ToastPosition.top,
                                   backgroundColor: Colors.red,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0,
+                                  textStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16.0,
+                                  ),
+                                  radius: 8.0, // optional, for rounded edges
                                 );
                               }
                             },
@@ -219,14 +228,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         TextButton(
                           onPressed: () {
-                            Fluttertoast.showToast(
-                              msg:
-                                  "Password reset screen is under developement",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.TOP,
-                              backgroundColor: Colors.redAccent,
-                              textColor: Colors.white,
-                              fontSize: 16.0,
+                            showToast(
+                              "Password screen is under developement",
+                              duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
+                              position: ToastPosition.top,
+                              backgroundColor: Colors.red,
+                              textStyle: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.0,
+                              ),
+                              radius: 8.0, // optional, for rounded edges
                             );
                           },
                           child: const Text(

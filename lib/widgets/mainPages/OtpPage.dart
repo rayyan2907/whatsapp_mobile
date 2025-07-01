@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
 
@@ -160,13 +160,16 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
       );
     }
     else{
-      Fluttertoast.showToast(
-        msg: msg,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.TOP,
+      showToast(
+        msg,
+        duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
+        position: ToastPosition.top,
         backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
+        textStyle: TextStyle(
+          color: Colors.white,
+          fontSize: 16.0,
+        ),
+        radius: 8.0, // optional, for rounded edges
       );
     }
   }

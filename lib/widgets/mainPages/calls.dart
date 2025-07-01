@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:whatsapp_mobile/color.dart';
 
 class CallsPage extends StatelessWidget {
@@ -39,13 +39,16 @@ class CallsPage extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
-                    Fluttertoast.showToast(
-                      msg: "Comming Soon",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.TOP,
+                    showToast(
+                      "Comming soon",
+                      duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
+                      position: ToastPosition.top,
                       backgroundColor: Colors.red,
-                      textColor: Colors.white,
-                      fontSize: 16.0,
+                      textStyle: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0,
+                      ),
+                      radius: 8.0, // optional, for rounded edges
                     );
                   },
                   borderRadius: BorderRadius.circular(12),
