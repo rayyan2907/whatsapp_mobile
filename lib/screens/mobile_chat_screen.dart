@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:whatsapp_mobile/services/signalR/SigalRService.dart';
 import 'package:whatsapp_mobile/widgets/messagesSection/chatList.dart';
 import 'package:whatsapp_mobile/widgets/messagesSection/messageBar.dart';
 import 'package:whatsapp_mobile/widgets/players/imageViewer.dart';
 import 'package:signalr_core/signalr_core.dart';
+
+import '../services/RegAndLogin/userStatusService.dart';
+import '../services/getUser.dart';
 
 class MobileChatScreen extends StatefulWidget {
   final Map<String, dynamic> user;
@@ -14,43 +19,63 @@ class MobileChatScreen extends StatefulWidget {
   @override
   State<MobileChatScreen> createState() => _MobileChatScreenState();
 }
-
 class _MobileChatScreenState extends State<MobileChatScreen> {
   late HubConnection _connection;
   bool _isOnline = false;
+  int id=0;
 
   @override
   void initState() {
     super.initState();
-    _connectToStatusHub();
+    SignalRManager().initConnection(widget.user['user_id']);
+    _checkInitialStatus();
+    _listenToUserStatus();
   }
+  void _checkInitialStatus() async {
+    print('called');
+    final status = await checkUserOnlineStatus(widget.user['user_id']);
+    setState(() {
 
-  Future<void> _connectToStatusHub() async {
+      _isOnline = status;
+    });
+  }
+  void _listenToUserStatus() async {
+    print(' user id is ${widget.user['user_id']}');
+
     _connection = HubConnectionBuilder()
         .withUrl(
-      'http://192.168.0.109:5246/statusHub?user_id=$widget.user',
-      HttpConnectionOptions(
-        transport: HttpTransportType.webSockets,
-        logging: (level, message) => print(message),
-      ),
+      'http://192.168.0.101:5246/statusHub?user_id=$id',
+      HttpConnectionOptions(transport: HttpTransportType.webSockets),
     )
         .build();
 
-    // Listen for status changes of other users
-    _connection.on("UserStatusChanged", (args) {
-      String otherUserId = args?[0];
-      bool isOnline = args?[1] ?? false;
+    _connection.on('UserStatusChanged', (args) {
+      print('hub called');
+      print('user id is ${widget.user['user_id']}');
 
-      if (otherUserId == widget.user['user_id'].toString()) {
-        setState(() {
-          _isOnline = isOnline;
-        });
+      if (args != null && args.length >= 2) {
+        final changedUserId = args?[0].toString().replaceAll('[', '').replaceAll(']', '');
+        final isOnline = args[1] as bool;
+
+        print('${widget.user['user_id']} is the opened user and $changedUserId is the new id');
+
+        if (changedUserId == widget.user['user_id'].toString()) {
+          setState(() {
+            _isOnline = isOnline;
+            print('state changed');
+          });
+        }
+      } else {
+        print('❌ args is null or too short: $args');
       }
     });
 
+
     await _connection.start();
-    print("🟢 Connected to StatusHub");
+
   }
+
+
 
   @override
   void dispose() {
@@ -105,23 +130,26 @@ class _MobileChatScreenState extends State<MobileChatScreen> {
             const SizedBox(width: 10),
             Expanded(
               child: Column(
+                mainAxisAlignment: _isOnline ? MainAxisAlignment.center : MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     "${widget.user['first_name'] ?? ''} ${widget.user['last_name'] ?? ''}".trim(),
-                    style: const TextStyle(
-                      fontSize: 16,
+                    style: TextStyle(
+                      fontSize: _isOnline ? 16 : 16,
                       fontWeight: FontWeight.w500,
                       color: Colors.white,
                     ),
                   ),
-                  Text(
-                    _isOnline ? "online" : "offline",
-                    style: const TextStyle(fontSize: 12, color: Colors.white60),
-                  ),
+                  if (_isOnline)
+                    const Text(
+                      "online",
+                      style: TextStyle(fontSize: 12, color: Colors.white60),
+                    ),
                 ],
               ),
             ),
+
           ],
         ),
         actions: [

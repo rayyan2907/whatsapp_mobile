@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:signalr_core/signalr_core.dart';
 import 'package:whatsapp_mobile/screens/mobile_chat_screen.dart';
 import 'package:whatsapp_mobile/services/contacts.dart';
 import 'package:whatsapp_mobile/widgets/mainPages/searchBar.dart';
 
+import '../../services/RegAndLogin/logOutService.dart';
+import '../../services/getUser.dart';
 import '../players/imageViewer.dart';
 
 class Contactlist extends StatefulWidget {
@@ -22,6 +25,8 @@ class _ContactlistState extends State<Contactlist> {
     // TODO: implement initState
     super.initState();
     loadContacts();
+    connectToSignalR();
+
   }
   void loadContacts()async{
     setState(() {
@@ -37,7 +42,29 @@ class _ContactlistState extends State<Contactlist> {
         contacts=result;
       });
   }
+  Future<void> loadData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final localPic = prefs.getString('profile_pic_url');
+    final user = await GetUser.getLoggedInUser();
+    print(user);
 
+  }
+  Future<void> connectToSignalR() async {
+    final user = await GetUser.getLoggedInUser();
+    if (user == null) return;
+
+    final userId = user['user_id'].toString();
+
+    final hubConnection = HubConnectionBuilder()
+        .withUrl(
+      'http://192.168.0.101:5246/statusHub?user_id=$userId',
+      HttpConnectionOptions(transport: HttpTransportType.webSockets),
+    )
+        .build();
+
+    await hubConnection.start();
+    print(" Connected to SignalR as $userId");
+  }
 
   @override
   Widget build(BuildContext context) {

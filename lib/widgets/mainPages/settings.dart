@@ -8,6 +8,7 @@ import 'package:whatsapp_mobile/services/RegAndLogin/logOutService.dart';
 import 'package:whatsapp_mobile/widgets/mainPages/dpUpdatePage.dart';
 import 'package:whatsapp_mobile/widgets/mainPages/login.dart';
 
+import '../../services/signalR/SigalRService.dart';
 import '../players/imageViewer.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -173,6 +174,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.clear();
+                  await SignalRManager().stopConnection();
+
                   showToast(
                     "Logged out successfully",
                     duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
