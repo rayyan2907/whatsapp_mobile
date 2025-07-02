@@ -7,8 +7,8 @@ import 'package:whatsapp_mobile/services/getUser.dart';
 import 'package:whatsapp_mobile/services/RegAndLogin/logOutService.dart';
 import 'package:whatsapp_mobile/widgets/mainPages/dpUpdatePage.dart';
 import 'package:whatsapp_mobile/widgets/mainPages/login.dart';
+import 'package:signalr_core/signalr_core.dart';
 
-import '../../services/signalR/SigalRService.dart';
 import '../players/imageViewer.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -28,6 +28,15 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
     loadData();
   }
+  late HubConnection _connection;
+  Future<void> _startConnection(int userId) async {
+    _connection = HubConnectionBuilder()
+        .withUrl('http://192.168.0.101:5246/statusHub?user_id=$userId')
+        .build();
+
+    await _connection.start();
+    print("🟢 Connection started in settings for user $userId");
+  }
 
   Future<void> loadData() async {
     final prefs = await SharedPreferences.getInstance();
@@ -40,10 +49,14 @@ class _SettingsPageState extends State<SettingsPage> {
 
         pic_url = localPic??user['profile_pic_url'];
       });
+
+      await _startConnection(user['user_id']);
     } else {
       await LogoutService.logout(context);
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -171,10 +184,11 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   );
                   await Future.delayed(const Duration(seconds: 1));
+                  await _connection.stop(); // ⛔ Close SignalR connection
+                  print("🔴 Connection stopped on logout");
 
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.clear();
-                  await SignalRManager().stopConnection();
 
                   showToast(
                     "Logged out successfully",

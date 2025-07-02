@@ -83,6 +83,7 @@ class _MobileChatScreenState extends State<MobileChatScreen> {
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
