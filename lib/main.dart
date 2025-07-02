@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:whatsapp_mobile/responsive/responsive_layout.dart';
 import 'package:whatsapp_mobile/screens/mobile_screen_layout.dart';
-import 'package:whatsapp_mobile/screens/web_screen_layout.dart';
+
 import 'package:whatsapp_mobile/widgets/mainPages/login.dart';
 import 'services/RegAndLogin/jwtExpire.dart';
 
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         if (!jwtCheck.isJwtExpired(token)) {
           return const ResponsiveLayout(
             MobileScreenLayout: MobileScreenLayout(),
-            WebScreenLayout: WebScreenLayout(),
+
           );
         } else {
           // ✅ Delay toast until after build

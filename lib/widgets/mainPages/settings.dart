@@ -31,7 +31,7 @@ class _SettingsPageState extends State<SettingsPage> {
   late HubConnection _connection;
   Future<void> _startConnection(int userId) async {
     _connection = HubConnectionBuilder()
-        .withUrl('http://192.168.0.101:5246/statusHub?user_id=$userId')
+        .withUrl('https://whatsappclonebackend.azurewebsites.net/statusHub?user_id=$userId')
         .build();
 
     await _connection.start();

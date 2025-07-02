@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:whatsapp_mobile/services/signalR/SigalRService.dart';
 import 'package:whatsapp_mobile/widgets/messagesSection/chatList.dart';
 import 'package:whatsapp_mobile/widgets/messagesSection/messageBar.dart';
 import 'package:whatsapp_mobile/widgets/players/imageViewer.dart';
@@ -27,7 +26,6 @@ class _MobileChatScreenState extends State<MobileChatScreen> {
   @override
   void initState() {
     super.initState();
-    SignalRManager().initConnection(widget.user['user_id']);
     _checkInitialStatus();
     _listenToUserStatus();
   }
@@ -44,7 +42,7 @@ class _MobileChatScreenState extends State<MobileChatScreen> {
 
     _connection = HubConnectionBuilder()
         .withUrl(
-      'http://192.168.0.101:5246/statusHub?user_id=$id',
+      'https://whatsappclonebackend.azurewebsites.net/statusHub?user_id=$id',
       HttpConnectionOptions(transport: HttpTransportType.webSockets),
     )
         .build();
