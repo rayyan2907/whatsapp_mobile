@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -5,6 +7,8 @@ import 'package:oktoast/oktoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signalr_core/signalr_core.dart';
 import 'package:whatsapp_mobile/model/text_msg.dart';
+
+import '../../services/VoiceRecord_service.dart';
 
 class MessageBar extends StatefulWidget {
   final Map<String, dynamic> user;
@@ -27,6 +31,8 @@ class _MessageBarState extends State<MessageBar> {
   late HubConnection hubConnection;
   bool isConnected = false;
   bool _isLoading = false;
+  late VoiceRecorderService _voiceRecorder;
+  bool _isRecording = false;
 
 
   void _onTextChanged() {
@@ -40,6 +46,8 @@ class _MessageBarState extends State<MessageBar> {
     super.initState();
     _controller.addListener(_onTextChanged);
     connectToSignalR();
+    _voiceRecorder = VoiceRecorderService();
+    _voiceRecorder.init();
   }
 
   Future<void> connectToSignalR() async {
@@ -162,6 +170,41 @@ class _MessageBarState extends State<MessageBar> {
       });
     }
   }
+  Future<void> startVoiceRecording() async {
+    setState(() => _isRecording = true);
+    await _voiceRecorder.startRecording();
+  }
+
+  Future<void> stopAndSendVoiceRecording() async {
+    final file = await _voiceRecorder.stopRecording();
+    setState(() => _isRecording = false);
+
+    if (file == null) return;
+
+    final bytes = await file.readAsBytes();
+    final base64Audio = base64Encode(bytes);
+    final now = DateTime.now();
+    final formattedTime = DateFormat('hh:mm a').format(now);
+
+    final msg = {
+      'reciever_id': widget.user['user_id'],
+      'type': 'voice',
+      'voice': base64Audio,
+      'extension': '.aac',
+      'time': formattedTime,
+      'is_seen': false,
+
+    };
+
+    try {
+      await hubConnection.invoke("SendMessage", args: [msg]);
+      showToast("Voice message sent", backgroundColor: Colors.green);
+    } catch (e) {
+      print("Error sending voice message: $e");
+      showToast("Failed to send voice message", backgroundColor: Colors.red);
+    }
+  }
+
 
 
   @override
@@ -169,6 +212,7 @@ class _MessageBarState extends State<MessageBar> {
     _controller.removeListener(_onTextChanged);
     _controller.dispose();
     super.dispose();
+    _voiceRecorder.dispose();
     hubConnection.stop();
     print('connection stoped');
   }
@@ -254,10 +298,26 @@ class _MessageBarState extends State<MessageBar> {
             ),
           )
               : Row(
-            children: const [
-              Icon(CupertinoIcons.camera, color: Colors.white, size: 20),
-              SizedBox(width: 8),
-              Icon(CupertinoIcons.mic, color: Colors.white, size: 20),
+            children: [
+              const Icon(CupertinoIcons.camera, color: Colors.white, size: 20),
+              const SizedBox(width: 8),
+              GestureDetector(
+                onLongPressStart: (_) async => await startVoiceRecording(),
+                onLongPressEnd: (_) async => await stopAndSendVoiceRecording(),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeInOut,
+                  width: _isRecording ? 100 : 20,
+                  height: _isRecording ? 100 : 20,
+                  child: Icon(
+                    _isRecording ? Icons.mic : CupertinoIcons.mic,
+                    color: _isRecording ? Colors.green : Colors.white,
+                    size: _isRecording ? 100 : 20, // icon size also increases slightly
+                  ),
+                ),
+              ),
+
+
             ],
           ),
 
