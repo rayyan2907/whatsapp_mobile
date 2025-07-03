@@ -159,10 +159,15 @@ class ChatlistState extends State<Chatlist> {
               voiceUrl: msg['voice_url'].toString(),
             );
 
-            return SizeTransition(
-              sizeFactor: animation,
-              child: child,
+            return ScaleTransition(
+              scale: animation,
+              child: FadeTransition(
+                opacity: animation,
+                child: child,
+              ),
             );
+
+
           },
         ),
       ],

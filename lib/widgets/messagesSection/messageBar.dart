@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signalr_core/signalr_core.dart';
 import 'package:whatsapp_mobile/model/text_msg.dart';
@@ -53,11 +54,11 @@ class _MessageBarState extends State<MessageBar> {
           accessTokenFactory: () async {
             final prefs = await SharedPreferences.getInstance();
             final token = prefs.getString('jwt') ?? '';
-            print('JWT Token: $token');
             return token;
           },
         ),
       )
+          .withAutomaticReconnect()
           .build();
 
       hubConnection.onclose((error) {
@@ -78,16 +79,56 @@ class _MessageBarState extends State<MessageBar> {
 
       await hubConnection.start(); // MUST be inside try
       isConnected = true;
+      showToast(
+        "connected",
+        duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
+        position: ToastPosition.top,
+        backgroundColor: Colors.green,
+        textStyle: TextStyle(
+          color: Colors.white,
+          fontSize: 16.0,
+        ),
+        radius: 8.0, // optional, for rounded edges
+      );
       print("SignalR connected");
     } catch (e, st) {
       print("SignalR Connection Error: $e");
       print("Stacktrace: $st");
+
+      showToast(
+        "Error in connection.Please restart the app",
+        duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
+        position: ToastPosition.top,
+        backgroundColor: Colors.red,
+        textStyle: TextStyle(
+          color: Colors.white,
+          fontSize: 16.0,
+        ),
+        radius: 8.0, // optional, for rounded edges
+      );
     }
   }
 
   //sending fubction is here
   Future<void> sendMessage() async {
-    if (!isConnected) return;
+    if (!isConnected) {
+      print('not connected');
+      showToast(
+        "Error in connection to server",
+        duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
+        position: ToastPosition.top,
+        backgroundColor: Colors.red,
+        textStyle: TextStyle(
+          color: Colors.white,
+          fontSize: 16.0,
+        ),
+        radius: 8.0, // optional, for rounded edges
+      );
+
+      return;
+
+    }
+
 
     final now = DateTime.now();
     final formattedTime = DateFormat('hh:mm a').format(now); // e.g., 04:50 PM
@@ -128,6 +169,8 @@ class _MessageBarState extends State<MessageBar> {
     _controller.removeListener(_onTextChanged);
     _controller.dispose();
     super.dispose();
+    hubConnection.stop();
+    print('connection stoped');
   }
 
   @override
