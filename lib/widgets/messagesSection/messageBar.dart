@@ -25,7 +25,7 @@ class _MessageBarState extends State<MessageBar> {
   bool _showSend = false;
   late HubConnection hubConnection;
   bool isConnected = false;
-
+  bool _isLoading = false;
 
 
   void _onTextChanged() {
@@ -47,7 +47,7 @@ class _MessageBarState extends State<MessageBar> {
     try {
       hubConnection = HubConnectionBuilder()
           .withUrl(
-        'http://192.168.0.101:5246/chatHub',
+        'https://whatsappclonebackend.azurewebsites.net/chatHub',
         HttpConnectionOptions(
           transport: HttpTransportType.webSockets,
           accessTokenFactory: () async {
@@ -72,7 +72,7 @@ class _MessageBarState extends State<MessageBar> {
           final newMsg = Map<String, dynamic>.from(arguments[0]);
           print("Received: $newMsg");
 
-          widget.onNewMessage(newMsg); // 👈 forward to parent
+          widget.onNewMessage(newMsg);
         }
       });
 
@@ -104,12 +104,21 @@ class _MessageBarState extends State<MessageBar> {
     if (msg.textMsg.isEmpty) return;
 
     try {
-      hubConnection.invoke("SendMessage", args: [msg.toJson()]);
+      setState(() {
+        _isLoading=true;
+      });
+      await hubConnection.invoke("SendMessage", args: [msg.toJson()]);
       _controller.clear();
+      setState(() {
+        _isLoading=false;
+      });
 
 
     } catch (e) {
       print("Failed to send message: $e");
+      setState(() {
+        _isLoading=false;
+      });
     }
   }
 
@@ -174,30 +183,41 @@ class _MessageBarState extends State<MessageBar> {
 
           // Show send or mic + camera
           _showSend
-              ? IconButton(
-                  onPressed: () {
-                    sendMessage();
-                  },
-                  icon: Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: const BoxDecoration(
-                      color: Colors.greenAccent, // WhatsApp green
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.send,
-                      color: Colors.black,
-                      size: 18,
-                    ),
-                  ),
-                )
+              ? _isLoading
+              ? Container(
+            width: 35,
+            height: 35,
+            padding: const EdgeInsets.all(6),
+            child: const CircularProgressIndicator(
+              strokeWidth: 2,
+              color: Colors.greenAccent,
+            ),
+          )
+              : IconButton(
+            onPressed: () async{
+              await sendMessage();
+            },
+            icon: Container(
+              padding: const EdgeInsets.all(6),
+              decoration: const BoxDecoration(
+                color: Colors.greenAccent,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.send,
+                color: Colors.black,
+                size: 18,
+              ),
+            ),
+          )
               : Row(
-                  children: const [
-                    Icon(CupertinoIcons.camera, color: Colors.white, size: 20),
-                    SizedBox(width: 8),
-                    Icon(CupertinoIcons.mic, color: Colors.white, size: 20),
-                  ],
-                ),
+            children: const [
+              Icon(CupertinoIcons.camera, color: Colors.white, size: 20),
+              SizedBox(width: 8),
+              Icon(CupertinoIcons.mic, color: Colors.white, size: 20),
+            ],
+          ),
+
         ],
       ),
     );

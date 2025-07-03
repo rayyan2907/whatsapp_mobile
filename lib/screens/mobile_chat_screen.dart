@@ -20,9 +20,11 @@ class MobileChatScreen extends StatefulWidget {
   State<MobileChatScreen> createState() => _MobileChatScreenState();
 }
 class _MobileChatScreenState extends State<MobileChatScreen> {
+  final GlobalKey<ChatlistState> chatListKey = GlobalKey<ChatlistState>();
   late HubConnection _connection;
   bool _isOnline = false;
   int id=0;
+
   List<Map<String, dynamic>> messages = [];
 
   void addMessage(Map<String, dynamic> msg) {
@@ -174,20 +176,26 @@ class _MobileChatScreenState extends State<MobileChatScreen> {
           Expanded(
             child: Center(
               child: Chatlist(
+                key: chatListKey,
                 user: widget.user,
                 messages: messages,
               ),
+
             ),
           ),
           MessageBar(
             user: widget.user,
             onNewMessage: (msg) {
               setState(() {
-                print('new msg got in list');
                 messages.insert(0, msg);
               });
+
+              // To notify Chatlist with animation:
+              final chatListState = chatListKey.currentState;
+              chatListState?.addNewMessage(msg);
             },
           ),
+
 
         ],
       ),
