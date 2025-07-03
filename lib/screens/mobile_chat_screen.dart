@@ -64,7 +64,7 @@ class _MobileChatScreenState extends State<MobileChatScreen> {
           });
         }
       } else {
-        print('❌ args is null or too short: $args');
+        print(' args is null or too short: $args');
       }
     });
 
