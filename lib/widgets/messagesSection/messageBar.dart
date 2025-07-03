@@ -1,10 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signalr_core/signalr_core.dart';
+import 'package:whatsapp_mobile/model/text_msg.dart';
 
 class MessageBar extends StatefulWidget {
-  const MessageBar({super.key});
+  final Map<String, dynamic> user;
+  final void Function(Map<String, dynamic>) onMessageSent;
+
+  const MessageBar({
+    super.key,
+    required this.user,
+    required this.onMessageSent,
+  });
+
 
   @override
   State<MessageBar> createState() => _MessageBarState();
@@ -15,6 +25,7 @@ class _MessageBarState extends State<MessageBar> {
   bool _showSend = false;
   late HubConnection hubConnection;
   bool isConnected = false;
+
 
   void _onTextChanged() {
     setState(() {
@@ -65,6 +76,46 @@ class _MessageBarState extends State<MessageBar> {
       print("Stacktrace: $st");
     }
   }
+
+  //sending fubction is here
+  Future<void> sendMessage() async {
+    if (!isConnected) return;
+
+    final now = DateTime.now();
+    final formattedTime = DateFormat('hh:mm a').format(now); // e.g., 04:50 PM
+
+
+    final msg = ChatMessage(
+      recieverId: widget.user['user_id'],
+      type: 'msg',
+      textMsg: _controller.text.trim(),
+      timestamp: formattedTime,
+      is_seen: false,
+    );
+
+    if (msg.textMsg.isEmpty) return;
+
+    try {
+      await hubConnection.invoke("SendMessage", args: [msg.toJson()]);
+      _controller.clear();
+      widget.onMessageSent({
+        "text_msg": msg.textMsg,
+        "time": msg.timestamp,
+        "type": msg.type,
+        "img_url": "",
+        "video_url": "",
+        "caption": "",
+        "duration": "",
+        "voice_url": "",
+        "is_seen": false,
+        "is_sent": true,
+      });
+
+    } catch (e) {
+      print("Failed to send message: $e");
+    }
+  }
+
 
   @override
   void dispose() {
@@ -128,7 +179,7 @@ class _MessageBarState extends State<MessageBar> {
           _showSend
               ? IconButton(
                   onPressed: () {
-                    // Send action
+                    sendMessage();
                   },
                   icon: Container(
                     padding: const EdgeInsets.all(6),

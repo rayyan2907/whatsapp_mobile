@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp_mobile/color.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:whatsapp_mobile/controller/selectedUser.dart';
 import 'package:whatsapp_mobile/widgets/messagesSection/chatList.dart';
 import 'package:whatsapp_mobile/widgets/messagesSection/messageBar.dart';
 import 'package:whatsapp_mobile/widgets/players/imageViewer.dart';
@@ -22,6 +23,13 @@ class _MobileChatScreenState extends State<MobileChatScreen> {
   late HubConnection _connection;
   bool _isOnline = false;
   int id=0;
+  List<Map<String, dynamic>> messages = [];
+
+  void addMessage(Map<String, dynamic> msg) {
+    setState(() {
+      messages.insert(0, msg); // reversed: true
+    });
+  }
 
   @override
   void initState() {
@@ -165,10 +173,16 @@ class _MobileChatScreenState extends State<MobileChatScreen> {
         children: [
           Expanded(
             child: Center(
-              child: Chatlist(user: widget.user),
+              child: Chatlist(
+                user: widget.user,
+                messages: messages,
+              ),
             ),
           ),
-          const MessageBar(),
+          MessageBar(
+            user: widget.user,
+            onMessageSent: addMessage,
+          ),
         ],
       ),
     );
