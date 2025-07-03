@@ -21,7 +21,8 @@
 
   class _ChatlistState extends State<Chatlist> {
     int offset = 0;
-    List messages = [];
+    List<Map<String, dynamic>> _previousMessages = [];
+
     bool _isLoading = false;
     bool _isFetchingMore = false;
     final ScrollController _scrollController = ScrollController();
@@ -54,9 +55,12 @@
 
       setState(() {
         _isLoading = false;
-        messages = result ?? [];
+        _previousMessages.addAll((result ?? []).cast<Map<String, dynamic>>());
         offset += 15;
       });
+
+
+
 
       WidgetsBinding.instance.addPostFrameCallback((_) => scrollToBottom());
     }
@@ -73,7 +77,7 @@
 
       if (result != null && result.isNotEmpty) {
         setState(() {
-          messages.addAll(result); // append at the end (top visually)
+          _previousMessages.addAll(result.cast<Map<String, dynamic>>()); // append at the end (top visually)
           offset += 15;
         });
       }
@@ -93,6 +97,8 @@
 
     @override
     Widget build(BuildContext context) {
+      final allMessages = [...widget.messages, ..._previousMessages];
+
       if (_isLoading) {
         return const Center(
           child: CircularProgressIndicator(color: Colors.green),
@@ -107,9 +113,10 @@
             reverse: true,
             controller: _scrollController,
             physics: const BouncingScrollPhysics(),
-            itemCount: messages.length + (_isFetchingMore ? 1 : 0),
+            itemCount: allMessages.length + (_isFetchingMore ? 1 : 0),
+
             itemBuilder: (context, index) {
-              if (_isFetchingMore && index == messages.length) {
+              if (_isFetchingMore && index == allMessages.length) {
                 return const Padding(
                   padding: EdgeInsets.symmetric(vertical: 15),
                   child: Center(
@@ -118,7 +125,8 @@
                 );
               }
 
-              final msg = messages[index];
+              final msg = allMessages[index];
+
               return msg['is_sent'] == true
                   ? Sentmessage(
                 textMsg: msg['text_msg'].toString(),

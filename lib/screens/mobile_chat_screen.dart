@@ -181,8 +181,14 @@ class _MobileChatScreenState extends State<MobileChatScreen> {
           ),
           MessageBar(
             user: widget.user,
-            onMessageSent: addMessage,
+            onNewMessage: (msg) {
+              setState(() {
+                print('new msg got in list');
+                messages.insert(0, msg);
+              });
+            },
           ),
+
         ],
       ),
     );

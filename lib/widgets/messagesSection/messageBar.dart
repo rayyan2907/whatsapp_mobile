@@ -7,12 +7,12 @@ import 'package:whatsapp_mobile/model/text_msg.dart';
 
 class MessageBar extends StatefulWidget {
   final Map<String, dynamic> user;
-  final void Function(Map<String, dynamic>) onMessageSent;
+  final Function(Map<String, dynamic>) onNewMessage;
 
   const MessageBar({
     super.key,
     required this.user,
-    required this.onMessageSent,
+    required this.onNewMessage,
   });
 
 
@@ -25,6 +25,7 @@ class _MessageBarState extends State<MessageBar> {
   bool _showSend = false;
   late HubConnection hubConnection;
   bool isConnected = false;
+
 
 
   void _onTextChanged() {
@@ -64,8 +65,15 @@ class _MessageBarState extends State<MessageBar> {
         isConnected = false;
       });
 
-      hubConnection.on("ReceiveMessage", (message) {
-        print("Received: $message");
+
+      hubConnection.on("ReceiveMessage", (arguments) {
+        print('main hub func');
+        if (arguments != null && arguments.isNotEmpty) {
+          final newMsg = Map<String, dynamic>.from(arguments[0]);
+          print("Received: $newMsg");
+
+          widget.onNewMessage(newMsg); // 👈 forward to parent
+        }
       });
 
       await hubConnection.start(); // MUST be inside try
@@ -96,20 +104,9 @@ class _MessageBarState extends State<MessageBar> {
     if (msg.textMsg.isEmpty) return;
 
     try {
-      await hubConnection.invoke("SendMessage", args: [msg.toJson()]);
+      hubConnection.invoke("SendMessage", args: [msg.toJson()]);
       _controller.clear();
-      widget.onMessageSent({
-        "text_msg": msg.textMsg,
-        "time": msg.timestamp,
-        "type": msg.type,
-        "img_url": "",
-        "video_url": "",
-        "caption": "",
-        "duration": "",
-        "voice_url": "",
-        "is_seen": false,
-        "is_sent": true,
-      });
+
 
     } catch (e) {
       print("Failed to send message: $e");
