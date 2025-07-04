@@ -10,8 +10,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signalr_core/signalr_core.dart';
 import 'package:whatsapp_mobile/model/text_msg.dart';
 
+import '../../model/voiceMessage_model.dart';
 import '../../services/VoiceRecord_service.dart';
 import '../../services/img_service.dart';
+import '../../services/voice_service.dart';
 import '../Selectors/imageSelector.dart';
 
 class MessageBar extends StatefulWidget {
@@ -53,12 +55,14 @@ class _MessageBarState extends State<MessageBar> {
   }
 
   Future<void> connectToSignalR() async {
-    print("trying to connect");
+    print("trying to connect")  ;
 
     try {
       hubConnection = HubConnectionBuilder()
           .withUrl(
-            'http://192.168.0.101:5246/chatHub',
+           'https://whatsappclonebackend.azurewebsites.net/chatHub',
+           //'http://192.168.0.101:5246/chatHub',
+
             HttpConnectionOptions(
               transport: HttpTransportType.webSockets,
               accessTokenFactory: () async {
@@ -190,36 +194,30 @@ class _MessageBarState extends State<MessageBar> {
       return;
     }
 
-    final bytes = await file.readAsBytes();
-    if (bytes.isEmpty) {
-      showToast("Voice file is empty");
-      print("Voice file is empty");
-      setState(() => _isSendingVoice = false);
-      return;
+    final voiceUrl = await VoiceUploadService.uploadVoice(file,widget.user['user_id']);
+
+    if (voiceUrl != null && voiceUrl.isNotEmpty) {
+      final now = DateTime.now();
+      final formattedTime = DateFormat('hh:mm a').format(now);
+
+      final msg = {
+        "reciever_id": widget.user['user_id'],
+        "type": "voice",
+        "voice_url": voiceUrl["voice_url"],
+        "time": formattedTime,
+        "is_seen": false,
+      };
+
+
+      try {
+        await hubConnection.invoke("SendMessage", args: [msg]);
+      } catch (e) {
+        print("Error sending voice msg via SignalR: $e");
+        showToast("Error sending voice message");
+      }
     }
-
-    final base64Audio = base64Encode(bytes);
-    final now = DateTime.now();
-    final formattedTime = DateFormat('hh:mm a').format(now);
-    final msg = {
-      'reciever_id': widget.user['user_id'],
-      'type': 'voice',
-      'file_name': 'voice_${DateTime.now().millisecondsSinceEpoch}.aac',
-      'time': formattedTime,
-      'is_seen': false,
-      'voice_byte': base64Audio,
-    };
-
-    try {
-      await hubConnection.invoke("SendMessage", args: [msg]);
-    } catch (e) {
-      print("Voice message send error: $e");
-      showToast("Error sending voice message");
-    }
-
     setState(() => _isSendingVoice = false);
   }
-
   @override
   void dispose() {
     _controller.removeListener(_onTextChanged);
@@ -249,6 +247,7 @@ class _MessageBarState extends State<MessageBar> {
                     });
                     if (files.isEmpty) return;
                     final file = files.first;
+                    print('sending to http');
                     final msg = await ImageUploadService.uploadImage(file, widget.user['user_id']);
                     print(msg);
 

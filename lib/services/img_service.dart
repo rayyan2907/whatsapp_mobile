@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -12,7 +11,7 @@ class ImageUploadService {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('jwt') ?? '';
 
-      final uri = Uri.parse("http://192.168.0.101:5246/message/sendimg");
+      final uri = Uri.parse("https://whatsappclonebackend.azurewebsites.net/message/sendimg");
       final request = http.MultipartRequest('POST', uri);
       request.headers['Authorization'] = 'Bearer $token';
 
@@ -34,7 +33,7 @@ class ImageUploadService {
 
       if (response.statusCode == 200) {
         final respStr = await response.stream.bytesToString();
-        final imageUrl = respStr.replaceAll('"', ''); // just in case response is stringified URL
+        final imageUrl = respStr.replaceAll('"', '');
         return {
           'img_url': imageUrl,
           'file_name': file.path.split('/').last,
