@@ -1,25 +1,24 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signalr_core/signalr_core.dart';
 import 'package:whatsapp_mobile/model/text_msg.dart';
 
 import '../../services/VoiceRecord_service.dart';
+import '../../services/img_service.dart';
+import '../Selectors/imageSelector.dart';
 
 class MessageBar extends StatefulWidget {
   final Map<String, dynamic> user;
   final Function(Map<String, dynamic>) onNewMessage;
 
-  const MessageBar({
-    super.key,
-    required this.user,
-    required this.onNewMessage,
-  });
-
+  const MessageBar({super.key, required this.user, required this.onNewMessage});
 
   @override
   State<MessageBar> createState() => _MessageBarState();
@@ -33,6 +32,9 @@ class _MessageBarState extends State<MessageBar> {
   bool _isLoading = false;
   late VoiceRecorderService _voiceRecorder;
   bool _isRecording = false;
+  bool _isSendingImage = false;
+  bool _isSendingVoice = false;
+
 
 
   void _onTextChanged() {
@@ -56,16 +58,16 @@ class _MessageBarState extends State<MessageBar> {
     try {
       hubConnection = HubConnectionBuilder()
           .withUrl(
-        'https://whatsappclonebackend.azurewebsites.net/chatHub',
-        HttpConnectionOptions(
-          transport: HttpTransportType.webSockets,
-          accessTokenFactory: () async {
-            final prefs = await SharedPreferences.getInstance();
-            final token = prefs.getString('jwt') ?? '';
-            return token;
-          },
-        ),
-      )
+            'http://192.168.0.101:5246/chatHub',
+            HttpConnectionOptions(
+              transport: HttpTransportType.webSockets,
+              accessTokenFactory: () async {
+                final prefs = await SharedPreferences.getInstance();
+                final token = prefs.getString('jwt') ?? '';
+                return token;
+              },
+            ),
+          )
           .withAutomaticReconnect()
           .build();
 
@@ -73,7 +75,6 @@ class _MessageBarState extends State<MessageBar> {
         print("SignalR closed: $error");
         isConnected = false;
       });
-
 
       hubConnection.on("ReceiveMessage", (arguments) {
         print('main hub func');
@@ -92,10 +93,7 @@ class _MessageBarState extends State<MessageBar> {
         duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
         position: ToastPosition.top,
         backgroundColor: Colors.green,
-        textStyle: TextStyle(
-          color: Colors.white,
-          fontSize: 16.0,
-        ),
+        textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
         radius: 8.0, // optional, for rounded edges
       );
       print("SignalR connected");
@@ -108,13 +106,15 @@ class _MessageBarState extends State<MessageBar> {
         duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
         position: ToastPosition.top,
         backgroundColor: Colors.red,
-        textStyle: TextStyle(
-          color: Colors.white,
-          fontSize: 16.0,
-        ),
+        textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
         radius: 8.0, // optional, for rounded edges
       );
     }
+  }
+
+  Future<bool> requestMicPermission() async {
+    final status = await Permission.microphone.request();
+    return status.isGranted;
   }
 
   //sending fubction is here
@@ -126,21 +126,15 @@ class _MessageBarState extends State<MessageBar> {
         duration: Duration(seconds: 2), // Equivalent to LENGTH_SHORT
         position: ToastPosition.top,
         backgroundColor: Colors.red,
-        textStyle: TextStyle(
-          color: Colors.white,
-          fontSize: 16.0,
-        ),
+        textStyle: TextStyle(color: Colors.white, fontSize: 16.0),
         radius: 8.0, // optional, for rounded edges
       );
 
       return;
-
     }
-
 
     final now = DateTime.now();
     final formattedTime = DateFormat('hh:mm a').format(now); // e.g., 04:50 PM
-
 
     final msg = ChatMessage(
       recieverId: widget.user['user_id'],
@@ -154,58 +148,77 @@ class _MessageBarState extends State<MessageBar> {
 
     try {
       setState(() {
-        _isLoading=true;
+        _isLoading = true;
       });
       await hubConnection.invoke("SendMessage", args: [msg.toJson()]);
       _controller.clear();
       setState(() {
-        _isLoading=false;
+        _isLoading = false;
       });
-
-
     } catch (e) {
       print("Failed to send message: $e");
       setState(() {
-        _isLoading=false;
+        _isLoading = false;
       });
     }
   }
+
   Future<void> startVoiceRecording() async {
-    setState(() => _isRecording = true);
+    final granted = await requestMicPermission();
+    if (!granted) {
+      showToast("Microphone permission denied");
+      return;
+    }
+
     await _voiceRecorder.startRecording();
+    await Future.delayed(
+      const Duration(milliseconds: 300),
+    ); // Let file initialize
+    setState(() => _isRecording = true);
   }
 
   Future<void> stopAndSendVoiceRecording() async {
     final file = await _voiceRecorder.stopRecording();
-    setState(() => _isRecording = false);
+    setState(() {
+      _isRecording = false;
+      _isSendingVoice = true;
+    });
 
-    if (file == null) return;
+    if (file == null || !await file.exists()) {
+      showToast("Recording failed or file not found");
+      setState(() => _isSendingVoice = false);
+      return;
+    }
 
     final bytes = await file.readAsBytes();
+    if (bytes.isEmpty) {
+      showToast("Voice file is empty");
+      print("Voice file is empty");
+      setState(() => _isSendingVoice = false);
+      return;
+    }
+
     final base64Audio = base64Encode(bytes);
     final now = DateTime.now();
     final formattedTime = DateFormat('hh:mm a').format(now);
-
     final msg = {
       'reciever_id': widget.user['user_id'],
       'type': 'voice',
-      'voice': base64Audio,
-      'extension': '.aac',
+      'file_name': 'voice_${DateTime.now().millisecondsSinceEpoch}.aac',
       'time': formattedTime,
       'is_seen': false,
-
+      'voice_byte': base64Audio,
     };
 
     try {
       await hubConnection.invoke("SendMessage", args: [msg]);
-      showToast("Voice message sent", backgroundColor: Colors.green);
     } catch (e) {
-      print("Error sending voice message: $e");
-      showToast("Failed to send voice message", backgroundColor: Colors.red);
+      print("Voice message send error: $e");
+      showToast("Error sending voice message");
     }
+
+    setState(() => _isSendingVoice = false);
   }
-
-
 
   @override
   void dispose() {
@@ -224,7 +237,51 @@ class _MessageBarState extends State<MessageBar> {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       child: Row(
         children: [
-          const Icon(CupertinoIcons.add, color: Colors.white, size: 20),
+          GestureDetector(
+            onTap: () => showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (_) => WhatsAppImagePicker(
+                  onImagesSelected: (List<File> files) async {
+                    setState(() {
+                      _isSendingImage=true;
+                    });
+                    if (files.isEmpty) return;
+                    final file = files.first;
+                    final msg = await ImageUploadService.uploadImage(file, widget.user['user_id']);
+                    print(msg);
+
+                    if (msg != null) {
+                      try {
+                        await hubConnection.invoke("SendMessage", args: [msg]);
+                        _isSendingImage=false;
+                      } catch (e) {
+                        print("Error sending image msg via SignalR: $e");
+                        _isSendingImage=false;
+                      }
+                    }
+                  }
+
+              ),
+            ),
+            child: _isSendingImage
+                ? const SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Colors.greenAccent,
+              ),
+            )
+                : const Icon(
+              CupertinoIcons.add,
+              color: Colors.white,
+              size: 20,
+            ),
+
+          ),
+
           const SizedBox(width: 8),
 
           // Input + Emoji
@@ -271,56 +328,66 @@ class _MessageBarState extends State<MessageBar> {
           // Show send or mic + camera
           _showSend
               ? _isLoading
-              ? Container(
-            width: 35,
-            height: 35,
-            padding: const EdgeInsets.all(6),
-            child: const CircularProgressIndicator(
-              strokeWidth: 2,
-              color: Colors.greenAccent,
-            ),
-          )
-              : IconButton(
-            onPressed: () async{
-              await sendMessage();
-            },
-            icon: Container(
-              padding: const EdgeInsets.all(6),
-              decoration: const BoxDecoration(
-                color: Colors.greenAccent,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.send,
-                color: Colors.black,
-                size: 18,
-              ),
-            ),
-          )
+                    ? Container(
+                        width: 35,
+                        height: 35,
+                        padding: const EdgeInsets.all(6),
+                        child: const CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.greenAccent,
+                        ),
+                      )
+                    : IconButton(
+                        onPressed: () async {
+                          await sendMessage();
+                        },
+                        icon: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: const BoxDecoration(
+                            color: Colors.greenAccent,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.send,
+                            color: Colors.black,
+                            size: 18,
+                          ),
+                        ),
+                      )
               : Row(
-            children: [
-              const Icon(CupertinoIcons.camera, color: Colors.white, size: 20),
-              const SizedBox(width: 8),
-              GestureDetector(
-                onLongPressStart: (_) async => await startVoiceRecording(),
-                onLongPressEnd: (_) async => await stopAndSendVoiceRecording(),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  curve: Curves.easeInOut,
-                  width: _isRecording ? 100 : 20,
-                  height: _isRecording ? 100 : 20,
-                  child: Icon(
-                    _isRecording ? Icons.mic : CupertinoIcons.mic,
-                    color: _isRecording ? Colors.green : Colors.white,
-                    size: _isRecording ? 100 : 20, // icon size also increases slightly
-                  ),
+                  children: [
+                    const Icon(
+                      CupertinoIcons.camera,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onLongPressStart: (_) async =>
+                          await startVoiceRecording(),
+                      onLongPressEnd: (_) async =>
+                          await stopAndSendVoiceRecording(),
+
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeInOut,
+                        width: _isRecording ? 100 : 20,
+                        height: _isRecording ? 100 : 20,
+                        child: _isSendingVoice
+                            ? const CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.greenAccent,
+                        )
+                            : Icon(
+                          _isRecording ? Icons.mic : CupertinoIcons.mic,
+                          color: _isRecording ? Colors.green : Colors.white,
+                          size: _isRecording ? 100 : 20,
+                        ),
+
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-
-
-            ],
-          ),
-
         ],
       ),
     );

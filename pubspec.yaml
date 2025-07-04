@@ -48,6 +48,7 @@ dependencies:
   signalr_core: ^1.1.1
   path_provider: ^2.1.2
   flutter_sound: ^9.2.13
+  web: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
