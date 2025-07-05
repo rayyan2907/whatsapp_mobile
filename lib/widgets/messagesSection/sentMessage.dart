@@ -17,9 +17,10 @@ class Sentmessage extends StatelessWidget {
   final String? duration;
   final String date;
   final bool isSeen;
+  final pic_url;
 
   const Sentmessage({
-    Key? key,
+    super.key,
     required this.type,
     this.textMsg,
     this.imgUrl,
@@ -29,7 +30,9 @@ class Sentmessage extends StatelessWidget {
     this.duration,
     required this.date,
     required this.isSeen,
-  }) : super(key: key);
+    required this.pic_url,
+
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +42,6 @@ class Sentmessage extends StatelessWidget {
       case 'img':
         content = ImageMessageBubble(
           imageUrl: imgUrl!,
-          caption: caption,
         );
         break;
       case 'video':
@@ -49,7 +51,8 @@ class Sentmessage extends StatelessWidget {
         content = VoiceMessageBubble(
           voiceUrl: voiceUrl ?? '',
           duration: duration ?? '0:00',
-          profileUrl: "https://whatsap.blob.core.windows.net/profilepics/713d99e3-a249-4633-bf61-d2df4e55dd39.jpg",
+          profileUrl: pic_url,
+
         );
         break;
 
@@ -65,6 +68,7 @@ class Sentmessage extends StatelessWidget {
       alignment: Alignment.centerRight,
       child: ConstrainedBox(
         constraints: BoxConstraints(
+          minWidth: 100,
           maxWidth: MediaQuery.of(context).size.width - 45,
         ),
         child: Card(
@@ -82,25 +86,13 @@ class Sentmessage extends StatelessWidget {
                 bottom: 4,
                 right: 10,
                 child: Row(
-                  children: [
-                    // Duration
-                    Row(
-                      children: [
-                        if (duration != null) ...[
-                          Text(
-                            duration!,
-                            style: const TextStyle(color: Colors.white70, fontSize: 12),
-                          ),
-                          const SizedBox(width: 65),
-                        ],
-                      ],
-                    ),
+                children: [
 
 
                     Text(
                       date,
                       style: const TextStyle(
-                        fontSize: 12,
+                        fontSize: 10,
                         color: Colors.white60,
                       ),
                     ),

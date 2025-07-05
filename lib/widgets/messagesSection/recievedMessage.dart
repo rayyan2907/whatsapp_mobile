@@ -11,12 +11,15 @@ class ReceivedMessage extends StatelessWidget {
   final String? videoUrl;
   final String? voiceUrl;
   final String? caption;
+  final Map<String, dynamic> user;
+
   final String? duration;
   final String date;
 
   const ReceivedMessage({
     Key? key,
     required this.type,
+    required this.user,
     this.textMsg,
     this.imgUrl,
     this.videoUrl,
@@ -34,7 +37,6 @@ class ReceivedMessage extends StatelessWidget {
       case 'img':
         content = ImageMessageBubble(
           imageUrl: imgUrl!,
-          caption: caption,
         );
         break;
       case 'video':
@@ -61,7 +63,7 @@ class ReceivedMessage extends StatelessWidget {
         content = VoiceMessageBubble(
           voiceUrl: voiceUrl ?? '',
           duration: duration ?? '0:00',
-          profileUrl: "https://whatsap.blob.core.windows.net/profilepics/713d99e3-a249-4633-bf61-d2df4e55dd39.jpg",
+          profileUrl: user['profile_pic_url'],
         );
         break;
       default:
@@ -74,7 +76,10 @@ class ReceivedMessage extends StatelessWidget {
     return Align(
       alignment: Alignment.centerLeft,
       child: ConstrainedBox(
+
         constraints: BoxConstraints(
+          minWidth: 100,
+
           maxWidth: MediaQuery.of(context).size.width - 45,
         ),
         child: Card(
@@ -93,24 +98,13 @@ class ReceivedMessage extends StatelessWidget {
                 right: 10,
                 child: Row(
                   children: [
-                    Row(
-                      children: [
-                        if (duration != null) ...[
-                          Text(
-                            duration!,
-                            style: const TextStyle(color: Colors.white70, fontSize: 12),
-                          ),
-                          const SizedBox(width: 75),
-                        ],
-                      ],
-                    ),
 
 
                     Text(
 
                       date,
                       style: const TextStyle(
-                        fontSize: 12,
+                        fontSize: 10,
                         color: Colors.white60,
                       ),
                     ),

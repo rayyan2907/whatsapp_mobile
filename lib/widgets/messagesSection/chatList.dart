@@ -4,9 +4,12 @@ import 'package:whatsapp_mobile/services/GetMessages.dart';
 import 'package:whatsapp_mobile/widgets/messagesSection/recievedMessage.dart';
 import 'package:whatsapp_mobile/widgets/messagesSection/sentMessage.dart';
 
+import '../../services/getUser.dart';
+
 class Chatlist extends StatefulWidget {
   final Map<String, dynamic> user;
   final List<Map<String, dynamic>> messages;
+
 
   const Chatlist({
     super.key,
@@ -23,11 +26,13 @@ class ChatlistState extends State<Chatlist> {
   int offset = 0;
   final GlobalKey<ChatlistState> chatListKey = GlobalKey<ChatlistState>();
 
+
   List<Map<String, dynamic>> _allMessages = [];
 
   bool _isLoading = false;
   bool _isFetchingMore = false;
   final ScrollController _scrollController = ScrollController();
+  String pic_url='';
 
   @override
   void initState() {
@@ -35,7 +40,14 @@ class ChatlistState extends State<Chatlist> {
     _allMessages = List.from(widget.messages); // base messages
     loadMessages(); // initial load
     _scrollController.addListener(_handleScroll);
+    loadData();
   }
+  Future<void> loadData() async {
+    final user = await GetUser.getLoggedInUser();
+pic_url=user?['profile_pic_url'];
+
+    }
+
 
   void _handleScroll() {
     if (_scrollController.position.pixels >=
@@ -111,64 +123,70 @@ class ChatlistState extends State<Chatlist> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
+      // ✅ First time loading spinner
       return const Center(
         child: CircularProgressIndicator(color: Colors.green),
       );
     }
-
     return Stack(
       children: [
-        AnimatedList(
-          key: _listKey,
-          reverse: true,
-          controller: _scrollController,
-          physics: const BouncingScrollPhysics(),
-          initialItemCount: _allMessages.length + (_isFetchingMore ? 1 : 0),
-          itemBuilder: (context, index, animation) {
-            if (_isFetchingMore && index == _allMessages.length) {
-              return const Padding(
-                padding: EdgeInsets.symmetric(vertical: 15),
+        Column(
+          children: [
+
+            if (_isFetchingMore)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
                 child: Center(
-                  child: CircularProgressIndicator(color: Colors.green),
+                  child: CircularProgressIndicator(color: Colors.green,strokeWidth: 2,),
                 ),
-              );
-            }
-
-            final msg = _allMessages[index];
-
-            final child = msg['is_sent'] == true
-                ? Sentmessage(
-              textMsg: msg['text_msg'].toString(),
-              date: msg['time'].toString(),
-              type: msg['type'].toString(),
-              imgUrl: msg['img_url'].toString(),
-              videoUrl: msg['video_url'].toString(),
-              caption: msg['caption'].toString(),
-              isSeen: msg['is_seen'] as bool? ?? false,
-              duration: msg['duration'].toString(),
-              voiceUrl: msg['voice_url'].toString(),
-            )
-                : ReceivedMessage(
-              textMsg: msg['text_msg'].toString(),
-              date: msg['time'].toString(),
-              type: msg['type'].toString(),
-              imgUrl: msg['img_url'].toString(),
-              videoUrl: msg['video_url'].toString(),
-              caption: msg['caption'].toString(),
-              duration: msg['duration'].toString(),
-              voiceUrl: msg['voice_url'].toString(),
-            );
-
-            return ScaleTransition(
-              scale: animation,
-              child: FadeTransition(
-                opacity: animation,
-                child: child,
               ),
-            );
 
+            Expanded(
+              child: AnimatedList(
+                key: _listKey,
+                reverse: true,
+                controller: _scrollController,
+                physics: const BouncingScrollPhysics(),
+                initialItemCount: _allMessages.length,
+                itemBuilder: (context, index, animation) {
+                  final msg = _allMessages[index];
 
-          },
+                  final child = msg['is_sent'] == true
+                      ? Sentmessage(
+                    textMsg: msg['text_msg'].toString(),
+                    date: msg['time'].toString(),
+                    type: msg['type'].toString(),
+                    imgUrl: msg['img_url'].toString(),
+                    videoUrl: msg['video_url'].toString(),
+                    caption: msg['caption'].toString(),
+                    isSeen: msg['is_seen'] as bool? ?? false,
+                    duration: msg['duration'].toString(),
+                    voiceUrl: msg['voice_url'].toString(),
+                    pic_url: pic_url,
+                  )
+                      : ReceivedMessage(
+                    textMsg: msg['text_msg'].toString(),
+                    date: msg['time'].toString(),
+                    type: msg['type'].toString(),
+                    imgUrl: msg['img_url'].toString(),
+                    videoUrl: msg['video_url'].toString(),
+                    caption: msg['caption'].toString(),
+                    duration: msg['duration'].toString(),
+                    voiceUrl: msg['voice_url'].toString(),
+                    user: widget.user,
+                  );
+
+                  return ScaleTransition(
+                    scale: animation,
+                    child: FadeTransition(
+                      opacity: animation,
+                      child: child,
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ],
     );

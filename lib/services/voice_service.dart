@@ -40,7 +40,7 @@ print(body);
 
       if (response.statusCode == 200) {
         print(response.body);
-        final voiceUrl = response.body.replaceAll('"', '');
+        final voiceUrl = response.body;
         return {
           'voice_url': voiceUrl,
           'file_name': fileName,

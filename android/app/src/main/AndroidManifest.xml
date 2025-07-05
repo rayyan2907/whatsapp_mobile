@@ -10,7 +10,7 @@
 
     <application
 
-        android:label="whatsapp_mobile"
+        android:label="Whatsapp Clone"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <provider
