@@ -10,7 +10,7 @@ class ImageUploadService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('jwt') ?? '';
-
+print("image service called");
       final uri = Uri.parse("https://whatsappclonebackend.azurewebsites.net/message/sendimg");
       final request = http.MultipartRequest('POST', uri);
       request.headers['Authorization'] = 'Bearer $token';

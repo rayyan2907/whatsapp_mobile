@@ -201,16 +201,19 @@ class _MessageBarState extends State<MessageBar> {
       final formattedTime = DateFormat('hh:mm a').format(now);
 
       final msg = {
-        "reciever_id": widget.user['user_id'],
-        "type": "voice",
+        "reciever_id": voiceUrl["reciever_id"],
+        "type": voiceUrl["type"],
         "voice_url": voiceUrl["voice_url"],
-        "time": formattedTime,
-        "is_seen": false,
+        "file_name": voiceUrl["file_name"],
+        "time": voiceUrl["time"],
+        "is_seen": voiceUrl["is_seen"],
       };
 
 
+
       try {
-        await hubConnection.invoke("SendMessage", args: [msg]);
+        await hubConnection.invoke("SendMessage", args: [voiceUrl]);
+
       } catch (e) {
         print("Error sending voice msg via SignalR: $e");
         showToast("Error sending voice message");
