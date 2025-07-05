@@ -107,9 +107,9 @@ flutter:
 flutter_icons:
   android: true
   ios: true
-  image_path: 'lib/assets/png-clipart-whatsapp-logo-whatsapp-logo-computer-icons-whatsapp-logo-trademark-grass.png'
+  image_path: 'lib/assets/images (2).png'
 flutter_native_splash:
   color: "#000000"               # Background color
-  image: 'lib/assets/png-clipart-whatsapp-logo-whatsapp-logo-computer-icons-whatsapp-logo-trademark-grass.png'
+  image: 'lib/assets/images (2).png'
   android: true
   ios: true
